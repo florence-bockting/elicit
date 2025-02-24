@@ -47,7 +47,7 @@ Documentation = "https://florence-bockting.github.io/elicit"
 Repository = "https://github.com/florence-bockting/elicit"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"  #"3.10.16"
+python = ">=3.10,<3.12"  #"3.10.16"
 configs = "3.0.3"
 numpy = "1.26.4"
 pandas = "2.2.3"
