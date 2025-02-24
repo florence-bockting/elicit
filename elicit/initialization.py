@@ -12,7 +12,7 @@ from elicit.types import (
     Trainer,
     Target,
     ExpertDict,
-    NF,
+    NFDict,
     Uniform,
 )
 from typing import Union, Optional, Any, Iterable, List, Dict
@@ -290,7 +290,7 @@ def init_prior(
     trainer: Trainer,
     model: Dict[str, Any],
     targets: List[Target],
-    network: Optional[NF],
+    network: Optional[NFDict],
     expert: ExpertDict,
     seed: int,
 ):

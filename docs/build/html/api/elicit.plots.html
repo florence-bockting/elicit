@@ -16,30 +16,33 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=e645c8fa"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/documentation_options.js?v=4acdca81"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
@@ -51,6 +54,7 @@
     <link rel="prev" title="elicit.optimization module" href="elicit.optimization.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -66,19 +70,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -86,7 +79,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -94,8 +86,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -111,7 +103,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -141,21 +134,17 @@
     
     
     <img src="../_static/mmp-logo-light.png" class="logo__image only-light" alt="Prior Learning - Home"/>
-    <script>document.write(`<img src="../_static/mmp-logo-dark.png" class="logo__image only-dark" alt="Prior Learning - Home"/>`);</script>
+    <img src="../_static/mmp-logo-dark.png" class="logo__image only-dark pst-js-only" alt="Prior Learning - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
@@ -174,6 +163,7 @@
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">elicit.plots module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elicit.simulations.html">elicit.simulations module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elicit.targets.html">elicit.targets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.types.html">elicit.types module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elicit.utils.html">elicit.utils module</a></li>
 </ul>
 </details></li>
@@ -191,9 +181,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -305,24 +300,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </label>
@@ -349,10 +336,12 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.initialization"><code class="docutils literal notranslate"><span class="pre">initialization()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.loss"><code class="docutils literal notranslate"><span class="pre">loss()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.hyperparameter"><code class="docutils literal notranslate"><span class="pre">hyperparameter()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.priors"><code class="docutils literal notranslate"><span class="pre">priors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_joint"><code class="docutils literal notranslate"><span class="pre">prior_joint()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_marginals"><code class="docutils literal notranslate"><span class="pre">prior_marginals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.elicits"><code class="docutils literal notranslate"><span class="pre">elicits()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.marginals"><code class="docutils literal notranslate"><span class="pre">marginals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.priorpredictive"><code class="docutils literal notranslate"><span class="pre">priorpredictive()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_averaging"><code class="docutils literal notranslate"><span class="pre">prior_averaging()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -388,6 +377,11 @@ The default is <code class="docutils literal notranslate"><span class="pre">4</s
 <dt>KeyError</dt><dd><p>Can’t find ‘init_matrix’ in eliobj.results. Have you excluded it from
 saving?</p>
 </dd>
+<dt>ValueError</dt><dd><p>if <cite>eliobj.results[“init_matrix”]</cite> is None: No samples from
+initialization distribution found. This plot function cannot be used
+if initial values were fixed by the user through the <cite>hyperparams</cite>
+argument in <a class="reference internal" href="elicit.elicit.html#elicit.elicit.initializer" title="elicit.elicit.initializer"><code class="xref py py-func docutils literal notranslate"><span class="pre">elicit.elicit.initializer()</span></code></a>.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -402,7 +396,7 @@ saving?</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="elicit.plots.loss">
-<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.loss" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.loss" title="Link to this definition">#</a></dt>
 <dd><p>plots the total loss and the loss per component.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -434,7 +428,7 @@ excluded ‘elicited_statistics’ from results savings?</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="elicit.plots.hyperparameter">
-<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">hyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">span</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#hyperparameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.hyperparameter" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">hyperparameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#hyperparameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.hyperparameter" title="Link to this definition">#</a></dt>
 <dd><p>plots the convergence of each hyperparameter across epochs.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -467,20 +461,20 @@ value. The default is <code class="docutils literal notranslate"><span class="pr
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="elicit.plots.priors">
-<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">priors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#priors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.priors" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="elicit.plots.prior_joint">
+<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">prior_joint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#prior_joint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.prior_joint" title="Link to this definition">#</a></dt>
 <dd><p>plot learned prior distributions of each model parameter based on prior
-samples from last epoch.</p>
+samples from last epoch. If parallelization has been used, select which
+replication you want to investigate by indexing it through the ‘idx’
+argument.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>eliobj</strong><span class="classifier">instance of <a class="reference internal" href="elicit.elicit.html#elicit.elicit.Elicit" title="elicit.elicit.Elicit"><code class="xref py py-func docutils literal notranslate"><span class="pre">elicit.elicit.Elicit()</span></code></a></span></dt><dd><p>fitted <code class="docutils literal notranslate"><span class="pre">eliobj</span></code> object.</p>
 </dd>
-<dt><strong>constraints</strong><span class="classifier">dict or None</span></dt><dd><p>constraints that apply to the model parameters. <em>Keys</em> refer to the
-name of the model parameter that should be constraint. <em>Values</em> refer
-to the constraint. Currently only ‘positive’ as constraint is supported.
-Set the argument to None if no constraints should be specified.
-The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dt><strong>idx</strong><span class="classifier">int or list or None:</span></dt><dd><p>only required if parallelization is used for fitting the method.
+Indexes the replications and allows to choose for which replication(s) the
+joint prior should be shown.</p>
 </dd>
 <dt><strong>**kwargs</strong><span class="classifier">any, optional</span></dt><dd><p>additional keyword arguments that can be passed to specify
 <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html">plt.subplots()</a></p>
@@ -488,9 +482,10 @@ The default value is <code class="docutils literal notranslate"><span class="pre
 </dl>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt>ValueError</dt><dd><p>Currently only ‘positive’ can be used as constraint. Found unsupported
 constraint type.</p>
+<p>The value for ‘idx’ is larger than the number of parallelizations.</p>
 </dd>
 <dt>KeyError</dt><dd><p>Can’t find ‘prior_samples’ in ‘eliobj.results’. Have you excluded
 ‘prior_samples’ from results savings?</p>
@@ -499,8 +494,38 @@ constraint type.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">el</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">priors</span><span class="p">(</span><span class="n">eliobj</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="s2">&quot;positive&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>                <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">el</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">prior_joint</span><span class="p">(</span><span class="n">eliobj</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="elicit.plots.prior_marginals">
+<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">prior_marginals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#prior_marginals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.prior_marginals" title="Link to this definition">#</a></dt>
+<dd><p>plots the convergence of each hyperparameter across epochs.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>eliobj</strong><span class="classifier">instance of <a class="reference internal" href="elicit.elicit.html#elicit.elicit.Elicit" title="elicit.elicit.Elicit"><code class="xref py py-func docutils literal notranslate"><span class="pre">elicit.elicit.Elicit()</span></code></a></span></dt><dd><p>fitted <code class="docutils literal notranslate"><span class="pre">eliobj</span></code> object.</p>
+</dd>
+<dt><strong>cols</strong><span class="classifier">int, optional</span></dt><dd><p>number of columns for arranging the subplots in the figure.
+The default is <code class="docutils literal notranslate"><span class="pre">4</span></code>.</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">any, optional</span></dt><dd><p>additional keyword arguments that can be passed to specify
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html">plt.subplots()</a></p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>KeyError</dt><dd><p>Can’t find ‘prior_samples’ in ‘eliobj.results’. Have you excluded
+‘prior_samples’ from results savings?</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">el</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">prior_marginals</span><span class="p">(</span><span class="n">eliobj</span><span class="p">,</span> <span class="n">figuresize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -599,6 +624,11 @@ in the last epoch</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="elicit.plots.prior_averaging">
+<span class="sig-prename descclassname"><span class="pre">elicit.plots.</span></span><span class="sig-name descname"><span class="pre">prior_averaging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eliobj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[1,</span> <span class="pre">1.5]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/elicit/plots.html#prior_averaging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.plots.prior_averaging" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -637,7 +667,8 @@ in the last epoch</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -649,10 +680,12 @@ in the last epoch</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.initialization"><code class="docutils literal notranslate"><span class="pre">initialization()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.loss"><code class="docutils literal notranslate"><span class="pre">loss()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.hyperparameter"><code class="docutils literal notranslate"><span class="pre">hyperparameter()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.priors"><code class="docutils literal notranslate"><span class="pre">priors()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_joint"><code class="docutils literal notranslate"><span class="pre">prior_joint()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_marginals"><code class="docutils literal notranslate"><span class="pre">prior_marginals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.elicits"><code class="docutils literal notranslate"><span class="pre">elicits()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.marginals"><code class="docutils literal notranslate"><span class="pre">marginals()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.priorpredictive"><code class="docutils literal notranslate"><span class="pre">priorpredictive()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.plots.prior_averaging"><code class="docutils literal notranslate"><span class="pre">prior_averaging()</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -701,8 +734,8 @@ By Florence Bockting
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

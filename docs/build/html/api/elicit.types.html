@@ -1,0 +1,1001 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>elicit.types module &#8212; Prior Learning</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=4acdca81"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/elicit.types';</script>
+    <link rel="icon" href="../_static/favicon-light.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="elicit.utils module" href="elicit.utils.html" />
+    <link rel="prev" title="elicit.targets module" href="elicit.targets.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mmp-logo-light.png" class="logo__image only-light" alt="Prior Learning - Home"/>
+    <img src="../_static/mmp-logo-dark.png" class="logo__image only-dark pst-js-only" alt="Prior Learning - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="elicit.html">elicit package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="elicit.extras.html">elicit.extras package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="elicit.extras.utils.html">elicit.extras.utils module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.elicit.html">elicit.elicit module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.initialization.html">elicit.initialization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.losses.html">elicit.losses module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.networks.html">elicit.networks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.optimization.html">elicit.optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.plots.html">elicit.plots module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.simulations.html">elicit.simulations module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.targets.html">elicit.targets module</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">elicit.types module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="elicit.utils.html">elicit.utils module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-To</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../explanation/index.html">Explanation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/florence-bockting/prior_elicitation" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/api/elicit.types.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>elicit.types module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper"><code class="docutils literal notranslate"><span class="pre">Hyper</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.name"><code class="docutils literal notranslate"><span class="pre">Hyper.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.constraint"><code class="docutils literal notranslate"><span class="pre">Hyper.constraint</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.constraint_name"><code class="docutils literal notranslate"><span class="pre">Hyper.constraint_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.vtype"><code class="docutils literal notranslate"><span class="pre">Hyper.vtype</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.dim"><code class="docutils literal notranslate"><span class="pre">Hyper.dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.shared"><code class="docutils literal notranslate"><span class="pre">Hyper.shared</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter"><code class="docutils literal notranslate"><span class="pre">Parameter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.name"><code class="docutils literal notranslate"><span class="pre">Parameter.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.family"><code class="docutils literal notranslate"><span class="pre">Parameter.family</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.hyperparams"><code class="docutils literal notranslate"><span class="pre">Parameter.hyperparams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.constraint_name"><code class="docutils literal notranslate"><span class="pre">Parameter.constraint_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.constraint"><code class="docutils literal notranslate"><span class="pre">Parameter.constraint</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict"><code class="docutils literal notranslate"><span class="pre">QueriesDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.name"><code class="docutils literal notranslate"><span class="pre">QueriesDict.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.value"><code class="docutils literal notranslate"><span class="pre">QueriesDict.value</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.func_name"><code class="docutils literal notranslate"><span class="pre">QueriesDict.func_name</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.name"><code class="docutils literal notranslate"><span class="pre">Target.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.query"><code class="docutils literal notranslate"><span class="pre">Target.query</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.target_method"><code class="docutils literal notranslate"><span class="pre">Target.target_method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.loss"><code class="docutils literal notranslate"><span class="pre">Target.loss</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.weight"><code class="docutils literal notranslate"><span class="pre">Target.weight</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict"><code class="docutils literal notranslate"><span class="pre">ExpertDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.ground_truth"><code class="docutils literal notranslate"><span class="pre">ExpertDict.ground_truth</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.num_samples"><code class="docutils literal notranslate"><span class="pre">ExpertDict.num_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.data"><code class="docutils literal notranslate"><span class="pre">ExpertDict.data</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform"><code class="docutils literal notranslate"><span class="pre">Uniform</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.radius"><code class="docutils literal notranslate"><span class="pre">Uniform.radius</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.mean"><code class="docutils literal notranslate"><span class="pre">Uniform.mean</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.hyper"><code class="docutils literal notranslate"><span class="pre">Uniform.hyper</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer"><code class="docutils literal notranslate"><span class="pre">Initializer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.method"><code class="docutils literal notranslate"><span class="pre">Initializer.method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.distribution"><code class="docutils literal notranslate"><span class="pre">Initializer.distribution</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.loss_quantile"><code class="docutils literal notranslate"><span class="pre">Initializer.loss_quantile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.iterations"><code class="docutils literal notranslate"><span class="pre">Initializer.iterations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.hyperparams"><code class="docutils literal notranslate"><span class="pre">Initializer.hyperparams</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.method"><code class="docutils literal notranslate"><span class="pre">Trainer.method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.seed"><code class="docutils literal notranslate"><span class="pre">Trainer.seed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.B"><code class="docutils literal notranslate"><span class="pre">Trainer.B</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.num_samples"><code class="docutils literal notranslate"><span class="pre">Trainer.num_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.epochs"><code class="docutils literal notranslate"><span class="pre">Trainer.epochs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.seed_chain"><code class="docutils literal notranslate"><span class="pre">Trainer.seed_chain</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict"><code class="docutils literal notranslate"><span class="pre">NFDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.inference_network"><code class="docutils literal notranslate"><span class="pre">NFDict.inference_network</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.network_specs"><code class="docutils literal notranslate"><span class="pre">NFDict.network_specs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.base_distribution"><code class="docutils literal notranslate"><span class="pre">NFDict.base_distribution</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist"><code class="docutils literal notranslate"><span class="pre">SaveHist</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.loss"><code class="docutils literal notranslate"><span class="pre">SaveHist.loss</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.time"><code class="docutils literal notranslate"><span class="pre">SaveHist.time</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.loss_component"><code class="docutils literal notranslate"><span class="pre">SaveHist.loss_component</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.hyperparameter"><code class="docutils literal notranslate"><span class="pre">SaveHist.hyperparameter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.hyperparameter_gradient"><code class="docutils literal notranslate"><span class="pre">SaveHist.hyperparameter_gradient</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults"><code class="docutils literal notranslate"><span class="pre">SaveResults</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.target_quantities"><code class="docutils literal notranslate"><span class="pre">SaveResults.target_quantities</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.elicited_statistics"><code class="docutils literal notranslate"><span class="pre">SaveResults.elicited_statistics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.prior_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.prior_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.model_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.model_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.expert_elicited_statistics"><code class="docutils literal notranslate"><span class="pre">SaveResults.expert_elicited_statistics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.expert_prior_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.expert_prior_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_loss_list"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_loss_list</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_prior"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_prior</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_matrix"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_matrix</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.loss_tensor_expert"><code class="docutils literal notranslate"><span class="pre">SaveResults.loss_tensor_expert</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.loss_tensor_model"><code class="docutils literal notranslate"><span class="pre">SaveResults.loss_tensor_model</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel"><code class="docutils literal notranslate"><span class="pre">Parallel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.runs"><code class="docutils literal notranslate"><span class="pre">Parallel.runs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.cores"><code class="docutils literal notranslate"><span class="pre">Parallel.cores</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.seeds"><code class="docutils literal notranslate"><span class="pre">Parallel.seeds</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-elicit.types">
+<span id="elicit-types-module"></span><h1>elicit.types module<a class="headerlink" href="#module-elicit.types" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Hyper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Hyper</span></span><a class="reference internal" href="../_modules/elicit/types.html#Hyper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Hyper" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Hyper.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.constraint">
+<span class="sig-name descname"><span class="pre">constraint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.Hyper.constraint" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.constraint_name">
+<span class="sig-name descname"><span class="pre">constraint_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Hyper.constraint_name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.vtype">
+<span class="sig-name descname"><span class="pre">vtype</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.Hyper.vtype" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.dim">
+<span class="sig-name descname"><span class="pre">dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Hyper.dim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Hyper.shared">
+<span class="sig-name descname"><span class="pre">shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.Hyper.shared" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Parameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Parameter</span></span><a class="reference internal" href="../_modules/elicit/types.html#Parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Parameter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parameter.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Parameter.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parameter.family">
+<span class="sig-name descname"><span class="pre">family</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Distribution</span></em><a class="headerlink" href="#elicit.types.Parameter.family" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parameter.hyperparams">
+<span class="sig-name descname"><span class="pre">hyperparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#elicit.types.Hyper" title="elicit.types.Hyper"><span class="pre">Hyper</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Parameter.hyperparams" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parameter.constraint_name">
+<span class="sig-name descname"><span class="pre">constraint_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Parameter.constraint_name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parameter.constraint">
+<span class="sig-name descname"><span class="pre">constraint</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.Parameter.constraint" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.QueriesDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">QueriesDict</span></span><a class="reference internal" href="../_modules/elicit/types.html#QueriesDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.QueriesDict" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.QueriesDict.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.QueriesDict.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.QueriesDict.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.QueriesDict.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.QueriesDict.func_name">
+<span class="sig-name descname"><span class="pre">func_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.QueriesDict.func_name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Target">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Target</span></span><a class="reference internal" href="../_modules/elicit/types.html#Target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Target" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Target.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Target.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Target.query">
+<span class="sig-name descname"><span class="pre">query</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#elicit.types.QueriesDict" title="elicit.types.QueriesDict"><span class="pre">QueriesDict</span></a></em><a class="headerlink" href="#elicit.types.Target.query" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Target.target_method">
+<span class="sig-name descname"><span class="pre">target_method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Target.target_method" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Target.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.Target.loss" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Target.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#elicit.types.Target.weight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.ExpertDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">ExpertDict</span></span><a class="reference internal" href="../_modules/elicit/types.html#ExpertDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.ExpertDict" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.ExpertDict.ground_truth">
+<span class="sig-name descname"><span class="pre">ground_truth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#elicit.types.ExpertDict.ground_truth" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.ExpertDict.num_samples">
+<span class="sig-name descname"><span class="pre">num_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.ExpertDict.num_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.ExpertDict.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#elicit.types.ExpertDict.data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Uniform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><a class="reference internal" href="../_modules/elicit/types.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Uniform" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Uniform.radius">
+<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#elicit.types.Uniform.radius" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Uniform.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#elicit.types.Uniform.mean" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Uniform.hyper">
+<span class="sig-name descname"><span class="pre">hyper</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Uniform.hyper" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Initializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Initializer</span></span><a class="reference internal" href="../_modules/elicit/types.html#Initializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Initializer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Initializer.method">
+<span class="sig-name descname"><span class="pre">method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Initializer.method" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Initializer.distribution">
+<span class="sig-name descname"><span class="pre">distribution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#elicit.types.Uniform" title="elicit.types.Uniform"><span class="pre">Uniform</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Initializer.distribution" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Initializer.loss_quantile">
+<span class="sig-name descname"><span class="pre">loss_quantile</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Initializer.loss_quantile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Initializer.iterations">
+<span class="sig-name descname"><span class="pre">iterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Initializer.iterations" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Initializer.hyperparams">
+<span class="sig-name descname"><span class="pre">hyperparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Initializer.hyperparams" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><a class="reference internal" href="../_modules/elicit/types.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Trainer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.method">
+<span class="sig-name descname"><span class="pre">method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#elicit.types.Trainer.method" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Trainer.seed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.B">
+<span class="sig-name descname"><span class="pre">B</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Trainer.B" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.num_samples">
+<span class="sig-name descname"><span class="pre">num_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Trainer.num_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.epochs">
+<span class="sig-name descname"><span class="pre">epochs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Trainer.epochs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Trainer.seed_chain">
+<span class="sig-name descname"><span class="pre">seed_chain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Trainer.seed_chain" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.NFDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">NFDict</span></span><a class="reference internal" href="../_modules/elicit/types.html#NFDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.NFDict" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.NFDict.inference_network">
+<span class="sig-name descname"><span class="pre">inference_network</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.NFDict.inference_network" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.NFDict.network_specs">
+<span class="sig-name descname"><span class="pre">network_specs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#elicit.types.NFDict.network_specs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.NFDict.base_distribution">
+<span class="sig-name descname"><span class="pre">base_distribution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#elicit.types.NFDict.base_distribution" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.SaveHist">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">SaveHist</span></span><a class="reference internal" href="../_modules/elicit/types.html#SaveHist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.SaveHist" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveHist.loss">
+<span class="sig-name descname"><span class="pre">loss</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveHist.loss" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveHist.time">
+<span class="sig-name descname"><span class="pre">time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveHist.time" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveHist.loss_component">
+<span class="sig-name descname"><span class="pre">loss_component</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveHist.loss_component" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveHist.hyperparameter">
+<span class="sig-name descname"><span class="pre">hyperparameter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveHist.hyperparameter" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveHist.hyperparameter_gradient">
+<span class="sig-name descname"><span class="pre">hyperparameter_gradient</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveHist.hyperparameter_gradient" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.SaveResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">SaveResults</span></span><a class="reference internal" href="../_modules/elicit/types.html#SaveResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.SaveResults" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.target_quantities">
+<span class="sig-name descname"><span class="pre">target_quantities</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.target_quantities" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.elicited_statistics">
+<span class="sig-name descname"><span class="pre">elicited_statistics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.elicited_statistics" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.prior_samples">
+<span class="sig-name descname"><span class="pre">prior_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.prior_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.model_samples">
+<span class="sig-name descname"><span class="pre">model_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.model_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.expert_elicited_statistics">
+<span class="sig-name descname"><span class="pre">expert_elicited_statistics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.expert_elicited_statistics" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.expert_prior_samples">
+<span class="sig-name descname"><span class="pre">expert_prior_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.expert_prior_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.init_loss_list">
+<span class="sig-name descname"><span class="pre">init_loss_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.init_loss_list" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.init_prior">
+<span class="sig-name descname"><span class="pre">init_prior</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.init_prior" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.init_matrix">
+<span class="sig-name descname"><span class="pre">init_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.init_matrix" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.loss_tensor_expert">
+<span class="sig-name descname"><span class="pre">loss_tensor_expert</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.loss_tensor_expert" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.SaveResults.loss_tensor_model">
+<span class="sig-name descname"><span class="pre">loss_tensor_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#elicit.types.SaveResults.loss_tensor_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="elicit.types.Parallel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">elicit.types.</span></span><span class="sig-name descname"><span class="pre">Parallel</span></span><a class="reference internal" href="../_modules/elicit/types.html#Parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#elicit.types.Parallel" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parallel.runs">
+<span class="sig-name descname"><span class="pre">runs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Parallel.runs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parallel.cores">
+<span class="sig-name descname"><span class="pre">cores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#elicit.types.Parallel.cores" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="elicit.types.Parallel.seeds">
+<span class="sig-name descname"><span class="pre">seeds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#elicit.types.Parallel.seeds" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="elicit.targets.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">elicit.targets module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="elicit.utils.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">elicit.utils module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper"><code class="docutils literal notranslate"><span class="pre">Hyper</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.name"><code class="docutils literal notranslate"><span class="pre">Hyper.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.constraint"><code class="docutils literal notranslate"><span class="pre">Hyper.constraint</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.constraint_name"><code class="docutils literal notranslate"><span class="pre">Hyper.constraint_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.vtype"><code class="docutils literal notranslate"><span class="pre">Hyper.vtype</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.dim"><code class="docutils literal notranslate"><span class="pre">Hyper.dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Hyper.shared"><code class="docutils literal notranslate"><span class="pre">Hyper.shared</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter"><code class="docutils literal notranslate"><span class="pre">Parameter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.name"><code class="docutils literal notranslate"><span class="pre">Parameter.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.family"><code class="docutils literal notranslate"><span class="pre">Parameter.family</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.hyperparams"><code class="docutils literal notranslate"><span class="pre">Parameter.hyperparams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.constraint_name"><code class="docutils literal notranslate"><span class="pre">Parameter.constraint_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parameter.constraint"><code class="docutils literal notranslate"><span class="pre">Parameter.constraint</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict"><code class="docutils literal notranslate"><span class="pre">QueriesDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.name"><code class="docutils literal notranslate"><span class="pre">QueriesDict.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.value"><code class="docutils literal notranslate"><span class="pre">QueriesDict.value</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.QueriesDict.func_name"><code class="docutils literal notranslate"><span class="pre">QueriesDict.func_name</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.name"><code class="docutils literal notranslate"><span class="pre">Target.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.query"><code class="docutils literal notranslate"><span class="pre">Target.query</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.target_method"><code class="docutils literal notranslate"><span class="pre">Target.target_method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.loss"><code class="docutils literal notranslate"><span class="pre">Target.loss</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Target.weight"><code class="docutils literal notranslate"><span class="pre">Target.weight</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict"><code class="docutils literal notranslate"><span class="pre">ExpertDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.ground_truth"><code class="docutils literal notranslate"><span class="pre">ExpertDict.ground_truth</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.num_samples"><code class="docutils literal notranslate"><span class="pre">ExpertDict.num_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.ExpertDict.data"><code class="docutils literal notranslate"><span class="pre">ExpertDict.data</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform"><code class="docutils literal notranslate"><span class="pre">Uniform</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.radius"><code class="docutils literal notranslate"><span class="pre">Uniform.radius</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.mean"><code class="docutils literal notranslate"><span class="pre">Uniform.mean</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Uniform.hyper"><code class="docutils literal notranslate"><span class="pre">Uniform.hyper</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer"><code class="docutils literal notranslate"><span class="pre">Initializer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.method"><code class="docutils literal notranslate"><span class="pre">Initializer.method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.distribution"><code class="docutils literal notranslate"><span class="pre">Initializer.distribution</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.loss_quantile"><code class="docutils literal notranslate"><span class="pre">Initializer.loss_quantile</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.iterations"><code class="docutils literal notranslate"><span class="pre">Initializer.iterations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Initializer.hyperparams"><code class="docutils literal notranslate"><span class="pre">Initializer.hyperparams</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.method"><code class="docutils literal notranslate"><span class="pre">Trainer.method</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.seed"><code class="docutils literal notranslate"><span class="pre">Trainer.seed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.B"><code class="docutils literal notranslate"><span class="pre">Trainer.B</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.num_samples"><code class="docutils literal notranslate"><span class="pre">Trainer.num_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.epochs"><code class="docutils literal notranslate"><span class="pre">Trainer.epochs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Trainer.seed_chain"><code class="docutils literal notranslate"><span class="pre">Trainer.seed_chain</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict"><code class="docutils literal notranslate"><span class="pre">NFDict</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.inference_network"><code class="docutils literal notranslate"><span class="pre">NFDict.inference_network</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.network_specs"><code class="docutils literal notranslate"><span class="pre">NFDict.network_specs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.NFDict.base_distribution"><code class="docutils literal notranslate"><span class="pre">NFDict.base_distribution</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist"><code class="docutils literal notranslate"><span class="pre">SaveHist</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.loss"><code class="docutils literal notranslate"><span class="pre">SaveHist.loss</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.time"><code class="docutils literal notranslate"><span class="pre">SaveHist.time</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.loss_component"><code class="docutils literal notranslate"><span class="pre">SaveHist.loss_component</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.hyperparameter"><code class="docutils literal notranslate"><span class="pre">SaveHist.hyperparameter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveHist.hyperparameter_gradient"><code class="docutils literal notranslate"><span class="pre">SaveHist.hyperparameter_gradient</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults"><code class="docutils literal notranslate"><span class="pre">SaveResults</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.target_quantities"><code class="docutils literal notranslate"><span class="pre">SaveResults.target_quantities</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.elicited_statistics"><code class="docutils literal notranslate"><span class="pre">SaveResults.elicited_statistics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.prior_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.prior_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.model_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.model_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.expert_elicited_statistics"><code class="docutils literal notranslate"><span class="pre">SaveResults.expert_elicited_statistics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.expert_prior_samples"><code class="docutils literal notranslate"><span class="pre">SaveResults.expert_prior_samples</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_loss_list"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_loss_list</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_prior"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_prior</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.init_matrix"><code class="docutils literal notranslate"><span class="pre">SaveResults.init_matrix</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.loss_tensor_expert"><code class="docutils literal notranslate"><span class="pre">SaveResults.loss_tensor_expert</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.SaveResults.loss_tensor_model"><code class="docutils literal notranslate"><span class="pre">SaveResults.loss_tensor_model</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel"><code class="docutils literal notranslate"><span class="pre">Parallel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.runs"><code class="docutils literal notranslate"><span class="pre">Parallel.runs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.cores"><code class="docutils literal notranslate"><span class="pre">Parallel.cores</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elicit.types.Parallel.seeds"><code class="docutils literal notranslate"><span class="pre">Parallel.seeds</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Florence Bockting
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Florence Bockting.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

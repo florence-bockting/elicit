@@ -23,6 +23,7 @@ Submodules
    elicit.plots
    elicit.simulations
    elicit.targets
+   elicit.types
    elicit.utils
 
 Module contents

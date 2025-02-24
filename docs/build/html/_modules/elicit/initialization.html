@@ -15,30 +15,33 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=384b581d" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
   
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=e645c8fa"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/documentation_options.js?v=4acdca81"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
@@ -48,6 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -63,19 +67,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -83,7 +76,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -91,8 +83,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -110,7 +102,8 @@
       
         
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -140,21 +133,17 @@
     
     
     <img src="../../_static/mmp-logo-light.png" class="logo__image only-light" alt="Prior Learning - Home"/>
-    <script>document.write(`<img src="../../_static/mmp-logo-dark.png" class="logo__image only-dark" alt="Prior Learning - Home"/>`);</script>
+    <img src="../../_static/mmp-logo-dark.png" class="logo__image only-dark pst-js-only" alt="Prior Learning - Home"/>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <ul class="nav bd-sidenav">
@@ -173,6 +162,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../api/elicit.plots.html">elicit.plots module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/elicit.simulations.html">elicit.simulations module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/elicit.targets.html">elicit.targets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/elicit.types.html">elicit.types module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/elicit.utils.html">elicit.utils module</a></li>
 </ul>
 </details></li>
@@ -190,9 +180,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -256,24 +251,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 
 </div></div>
       
@@ -304,26 +291,36 @@ document.write(`
 <span class="c1">#</span>
 <span class="c1"># noqa SPDX-License-Identifier: Apache-2.0</span>
 
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">import</span> <span class="nn">tensorflow_probability</span> <span class="k">as</span> <span class="nn">tfp</span>
-<span class="kn">import</span> <span class="nn">elicit</span> <span class="k">as</span> <span class="nn">el</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow_probability</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tfp</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">elicit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">el</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">elicit.types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Parameter</span><span class="p">,</span>
+    <span class="n">Initializer</span><span class="p">,</span>
+    <span class="n">Trainer</span><span class="p">,</span>
+    <span class="n">Target</span><span class="p">,</span>
+    <span class="n">ExpertDict</span><span class="p">,</span>
+    <span class="n">NFDict</span><span class="p">,</span>
+    <span class="n">Uniform</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">qmc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="n">tfd</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">distributions</span>
 
 
 <div class="viewcode-block" id="uniform_samples">
 <a class="viewcode-back" href="../../api/elicit.initialization.html#elicit.initialization.uniform_samples">[docs]</a>
-<span class="k">def</span> <span class="nf">uniform_samples</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">uniform_samples</span><span class="p">(</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">hyppar</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">hyppar</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Parameter</span><span class="p">],</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sample from uniform distribution for each hyperparameter.</span>
@@ -332,7 +329,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    seed : int</span>
 <span class="sd">        user-specified seed defined in :func:`elicit.elicit.trainer`.</span>
-<span class="sd">    hyppar : list or None</span>
+<span class="sd">    hyppar : list</span>
 <span class="sd">        list of hyperparameter names (strings) declaring the order for the</span>
 <span class="sd">        list of **means** and **radius**.</span>
 <span class="sd">        If **means** and **radius** are each a float, then this number is</span>
@@ -350,8 +347,8 @@ document.write(`
 <span class="sd">    radius : float or list</span>
 <span class="sd">        Specification of the uniform distribution. The uniform distribution</span>
 <span class="sd">        ranges from (**mean-radius**) to (**mean+radius**).</span>
-<span class="sd">    parameters : dict</span>
-<span class="sd">        dictionary including all information about the (hyper-)parameters.</span>
+<span class="sd">    parameters : list</span>
+<span class="sd">        list including dictionary with all information about the (hyper-)parameters.</span>
 <span class="sd">        Can be retrieved as attribute from the initialized</span>
 <span class="sd">        :mod:`elicit.elicit.Elicit` obj (i.e., ``eliobj.parameters``)</span>
 
@@ -381,15 +378,24 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;method must be a string.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sobol&quot;</span><span class="p">,</span> <span class="s2">&quot;lhs&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Unsupported method. Choose from &#39;sobol&#39;, &#39;lhs&#39;, or &#39;random&#39;.&quot;</span>
-            <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported method. Choose from &#39;sobol&#39;, &#39;lhs&#39;, or &#39;random&#39;.&quot;</span><span class="p">)</span>
 
     <span class="c1"># counter number of hyperparameters</span>
     <span class="n">n_hypparam</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">name_hyper</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">name_hyper</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">res_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
     <span class="k">if</span> <span class="n">hyppar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If different mean values should be specified per hyperparameter, the hyppar argument&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot; cannot be None.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If different radius values should be specified per hyperparameter, the hyppar argument&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot; cannot be None.&quot;</span>
+            <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">hyperparam</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;hyperparams&quot;</span><span class="p">]:</span>
                 <span class="n">dim</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;hyperparams&quot;</span><span class="p">][</span><span class="n">hyperparam</span><span class="p">][</span><span class="s2">&quot;dim&quot;</span><span class="p">]</span>
@@ -397,73 +403,76 @@ document.write(`
                 <span class="n">n_hypparam</span> <span class="o">+=</span> <span class="n">dim</span>
                 <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
                     <span class="n">name_hyper</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    
-    
-                <span class="c1"># make sure type is correct</span>
-                <span class="n">mean</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-                <span class="n">radius</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    
-                <span class="c1"># Generate samples based on the chosen method</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span><span class="p">:</span>
-                    <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-                    <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
-                    <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">LatinHypercube</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-                    <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
-                    <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
-                        <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
-                    <span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">dim</span><span class="p">))</span>
-                <span class="c1"># Inverse transform</span>
-                <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
-                    <span class="n">sample_dat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">sample_data</span><span class="p">),</span>
-                                         <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-                    <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
-                        <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
-                    <span class="p">)</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">sample_dat</span><span class="p">)</span>
-                <span class="n">res_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">uniform_samples</span>
+
+        <span class="c1"># make sure type is correct</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="c1"># Generate samples based on the chosen method</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span><span class="p">:</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">n_hypparam</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">LatinHypercube</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">n_hypparam</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+            <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
+                <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_hypparam</span><span class="p">))</span>
+        <span class="c1"># Inverse transform</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
+            <span class="n">sample_dat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">sample_data</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
+                <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">sample_dat</span><span class="p">)</span>
+        <span class="c1"># store initialization results per hyperparameter</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_hypparam</span><span class="p">),</span> <span class="n">name_hyper</span><span class="p">):</span>
+            <span class="n">res_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">uniform_samples</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">uniform_samples</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;mean and radius arguments of function uniform_samples must be of type list.&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># initialize sampler</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span><span class="p">:</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
+            <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">LatinHypercube</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">hyppar</span><span class="p">):</span>
             <span class="c1"># make sure type is correct</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
             <span class="n">j</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
-                <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
-                    <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span><span class="p">:</span>
-                <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
-                <span class="n">sampler</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">LatinHypercube</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
-
-            <span class="c1"># Inverse transform</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sobol&quot;</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;lhs&quot;</span><span class="p">:</span>
-                <span class="n">sample_dat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span>
-                    <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">sample_data</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span>
+                <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="p">)</span>
-                <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span>
-                    <span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">sample_dat</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
-            <span class="n">res_dict</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">uniform_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[:,</span><span class="kc">None</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sample_data</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
+                <span class="c1"># Inverse transform</span>
+                <span class="n">sample_dat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">sample_data</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="n">uniform_samples</span> <span class="o">=</span> <span class="n">tfd</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span>
+                    <span class="n">sample_dat</span>
+                <span class="p">)</span>
+
+            <span class="n">res_dict</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">uniform_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">res_dict</span></div>
 
 
 
 <div class="viewcode-block" id="init_runs">
 <a class="viewcode-back" href="../../api/elicit.initialization.html#elicit.initialization.init_runs">[docs]</a>
-<span class="k">def</span> <span class="nf">init_runs</span><span class="p">(</span>
-    <span class="n">expert_elicited_statistics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">initializer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">trainer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">targets</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">network</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">expert</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_runs</span><span class="p">(</span>
+    <span class="n">expert_elicited_statistics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">initializer</span><span class="p">:</span> <span class="n">Initializer</span><span class="p">,</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Parameter</span><span class="p">],</span>
+    <span class="n">trainer</span><span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">targets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Target</span><span class="p">],</span>
+    <span class="n">network</span><span class="p">:</span> <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">expert</span><span class="p">:</span> <span class="n">ExpertDict</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the discrepancy between expert data and simulated data for</span>
@@ -475,19 +484,21 @@ document.write(`
 <span class="sd">        user-specified expert data as provided by :func:`elicit.elicit.Expert`.</span>
 <span class="sd">    initializer : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.initializer`.</span>
-<span class="sd">    parameters : dict</span>
+<span class="sd">    parameters : list</span>
 <span class="sd">        user-input from :func:`elicit.elicit.parameter`.</span>
 <span class="sd">    trainer : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.trainer`.</span>
 <span class="sd">    model : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.model`.</span>
-<span class="sd">    targets : dict</span>
+<span class="sd">    targets : list</span>
 <span class="sd">        user-input from :func:`elicit.elicit.target`.</span>
-<span class="sd">    network : dict</span>
+<span class="sd">    network : dict, optional</span>
 <span class="sd">        user-input from one of the methods implemented in the</span>
 <span class="sd">        :mod:`elicit.networks` module.</span>
 <span class="sd">    expert : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.Expert`.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        internal seed for reproducible results</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -502,7 +513,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># create a copy of the seed variable for incremental increase of seed</span>
     <span class="c1"># for each initialization run</span>
-    <span class="n">seed</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">])</span>
+    <span class="n">seed_copy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># set seed</span>
     <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># initialize saving of results</span>
@@ -511,24 +522,24 @@ document.write(`
     <span class="n">save_prior</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># sample initial values</span>
-    <span class="n">init_matrix</span> <span class="o">=</span> <span class="n">uniform_samples</span><span class="p">(</span>
-        <span class="n">seed</span><span class="p">,</span>
-        <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;hyper&quot;</span><span class="p">],</span>
-        <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;iterations&quot;</span><span class="p">],</span>
-        <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">],</span>
-        <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span>
-        <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;radius&quot;</span><span class="p">],</span>
-        <span class="n">parameters</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">init_matrix</span> <span class="o">=</span> <span class="n">uniform_samples</span><span class="p">(</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">hyppar</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;hyper&quot;</span><span class="p">],</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;iterations&quot;</span><span class="p">],</span>
+            <span class="n">method</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">],</span>
+            <span class="n">mean</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">][</span><span class="s2">&quot;radius&quot;</span><span class="p">],</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialization&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;iterations&quot;</span><span class="p">])):</span>
         <span class="c1"># update seed</span>
-        <span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">seed_copy</span> <span class="o">=</span> <span class="n">seed_copy</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="c1"># extract initial hyperparameter value for each run</span>
-        <span class="n">init_matrix_slice</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">init_matrix</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
-                             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">init_matrix</span><span class="p">}</span>
+        <span class="n">init_matrix_slice</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">init_matrix</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">init_matrix</span><span class="p">}</span>
         <span class="c1"># initialize prior distributions based on initial hyperparameters</span>
         <span class="n">prior_model</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">simulations</span><span class="o">.</span><span class="n">Priors</span><span class="p">(</span>
             <span class="n">ground_truth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -537,21 +548,23 @@ document.write(`
             <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
             <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span>
             <span class="n">expert</span><span class="o">=</span><span class="n">expert</span><span class="p">,</span>
-            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed_copy</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># simulate from priors and generative model and compute the</span>
         <span class="c1"># elicited statistics corresponding to the initial hyperparameters</span>
         <span class="p">(</span><span class="n">training_elicited_statistics</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">one_forward_simulation</span><span class="p">(</span>
-            <span class="n">prior_model</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">targets</span>
+            <span class="n">prior_model</span><span class="o">=</span><span class="n">prior_model</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">targets</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span>
         <span class="p">)</span>
 
         <span class="c1"># compute discrepancy between expert elicited statistics and</span>
         <span class="c1"># simulated data corresponding to initial hyperparameter values</span>
         <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">total_loss</span><span class="p">(</span>
-            <span class="n">training_elicited_statistics</span><span class="p">,</span>
-            <span class="n">expert_elicited_statistics</span><span class="p">,</span>
-            <span class="n">epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">elicit_training</span><span class="o">=</span><span class="n">training_elicited_statistics</span><span class="p">,</span>
+            <span class="n">elicit_expert</span><span class="o">=</span><span class="n">expert_elicited_statistics</span><span class="p">,</span>
             <span class="n">targets</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># save loss value, initial hyperparameter values and initialized prior</span>
@@ -567,15 +580,16 @@ document.write(`
 
 <div class="viewcode-block" id="init_prior">
 <a class="viewcode-back" href="../../api/elicit.initialization.html#elicit.initialization.init_prior">[docs]</a>
-<span class="k">def</span> <span class="nf">init_prior</span><span class="p">(</span>
-    <span class="n">expert_elicited_statistics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">initializer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">trainer</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">targets</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">network</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-    <span class="n">expert</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_prior</span><span class="p">(</span>
+    <span class="n">expert_elicited_statistics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="n">initializer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Initializer</span><span class="p">],</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Parameter</span><span class="p">],</span>
+    <span class="n">trainer</span><span class="p">:</span> <span class="n">Trainer</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">targets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Target</span><span class="p">],</span>
+    <span class="n">network</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NFDict</span><span class="p">],</span>
+    <span class="n">expert</span><span class="p">:</span> <span class="n">ExpertDict</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts target loss, corresponding initial hyperparameter values, and</span>
@@ -585,21 +599,23 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    expert_elicited_statistics : dict</span>
 <span class="sd">        user-specified expert data as provided by :func:`elicit.elicit.Expert`.</span>
-<span class="sd">    initializer : dict</span>
+<span class="sd">    initializer : dict, optional</span>
 <span class="sd">        user-input from :func:`elicit.elicit.initializer`.</span>
-<span class="sd">    parameters : dict</span>
+<span class="sd">    parameters : list</span>
 <span class="sd">        user-input from :func:`elicit.elicit.parameter`.</span>
 <span class="sd">    trainer : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.trainer`.</span>
 <span class="sd">    model : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.model`.</span>
-<span class="sd">    targets : dict</span>
+<span class="sd">    targets : list</span>
 <span class="sd">        user-input from :func:`elicit.elicit.target`.</span>
-<span class="sd">    network : dict</span>
+<span class="sd">    network : dict, optional</span>
 <span class="sd">        user-input from one of the methods implemented in the</span>
 <span class="sd">        :mod:`elicit.networks` module.</span>
 <span class="sd">    expert : dict</span>
 <span class="sd">        user-input from :func:`elicit.elicit.Expert`.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        internally used seed for reproducible results</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -615,27 +631,27 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;parametric_prior&quot;</span><span class="p">:</span>
-        
+    <span class="k">if</span> <span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;parametric_prior&quot;</span> <span class="ow">and</span> <span class="n">initializer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="k">if</span> <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;hyperparams&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="n">loss_list</span><span class="p">,</span> <span class="n">init_prior</span><span class="p">,</span> <span class="n">init_matrix</span> <span class="o">=</span> <span class="n">init_runs</span><span class="p">(</span>
-                <span class="n">expert_elicited_statistics</span><span class="p">,</span>
-                <span class="n">initializer</span><span class="p">,</span>
-                <span class="n">parameters</span><span class="p">,</span>
-                <span class="n">trainer</span><span class="p">,</span>
-                <span class="n">model</span><span class="p">,</span>
-                <span class="n">targets</span><span class="p">,</span>
-                <span class="n">network</span><span class="p">,</span>
-                <span class="n">expert</span><span class="p">,</span>
+                <span class="n">expert_elicited_statistics</span><span class="o">=</span><span class="n">expert_elicited_statistics</span><span class="p">,</span>
+                <span class="n">initializer</span><span class="o">=</span><span class="n">initializer</span><span class="p">,</span>
+                <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+                <span class="n">trainer</span><span class="o">=</span><span class="n">trainer</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">targets</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
+                <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">expert</span><span class="o">=</span><span class="n">expert</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
-    
+
             <span class="c1"># extract pre-specified quantile loss out of all runs</span>
             <span class="c1"># get corresponding set of initial values</span>
             <span class="n">loss_quantile</span> <span class="o">=</span> <span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;loss_quantile&quot;</span><span class="p">]</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
-                <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">loss_list</span> <span class="o">==</span> <span class="n">tfp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">loss_list</span><span class="p">,</span>
-                                                           <span class="p">[</span><span class="n">loss_quantile</span><span class="p">]))</span>
+                <span class="n">tf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">loss_list</span> <span class="o">==</span> <span class="n">tfp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">loss_list</span><span class="p">,</span> <span class="p">[</span><span class="n">loss_quantile</span><span class="p">]))</span>
             <span class="p">)</span>
 
             <span class="n">init_prior_model</span> <span class="o">=</span> <span class="n">init_prior</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span>
@@ -646,13 +662,13 @@ document.write(`
                 <span class="n">init_matrix_slice</span><span class="o">=</span><span class="n">initializer</span><span class="p">[</span><span class="s2">&quot;hyperparams&quot;</span><span class="p">],</span>
                 <span class="n">trainer</span><span class="o">=</span><span class="n">trainer</span><span class="p">,</span>
                 <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
-                <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span>
+                <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">expert</span><span class="o">=</span><span class="n">expert</span><span class="p">,</span>
-                <span class="n">seed</span><span class="o">=</span><span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">],</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="c1"># initialize empty variables for avoiding return conflicts</span>
             <span class="n">loss_list</span><span class="p">,</span> <span class="n">init_prior</span><span class="p">,</span> <span class="n">init_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;deep_prior&quot;</span> <span class="ow">and</span> <span class="n">network</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># prepare generative model</span>
         <span class="n">init_prior_model</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">simulations</span><span class="o">.</span><span class="n">Priors</span><span class="p">(</span>
             <span class="n">ground_truth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -661,7 +677,7 @@ document.write(`
             <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
             <span class="n">network</span><span class="o">=</span><span class="n">network</span><span class="p">,</span>
             <span class="n">expert</span><span class="o">=</span><span class="n">expert</span><span class="p">,</span>
-            <span class="n">seed</span><span class="o">=</span><span class="n">trainer</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">],</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># initialize empty variables for avoiding return conflicts</span>
         <span class="n">loss_list</span><span class="p">,</span> <span class="n">init_prior</span><span class="p">,</span> <span class="n">init_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -672,11 +688,11 @@ document.write(`
 
 <div class="viewcode-block" id="uniform">
 <a class="viewcode-back" href="../../api/elicit.initialization.html#elicit.initialization.uniform">[docs]</a>
-<span class="k">def</span> <span class="nf">uniform</span><span class="p">(</span>
-    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">hyper</span><span class="p">:</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">uniform</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">hyper</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Uniform</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Specification of uniform distribution used for drawing initial values for</span>
 <span class="sd">    each hyperparameter. Initial values are drawn from a uniform distribution</span>
@@ -704,13 +720,12 @@ document.write(`
 <span class="sd">        The order of values should be equivalent to the order of hyperparameter</span>
 <span class="sd">        names provided in **hyper**.</span>
 <span class="sd">        The default is ``0.``.</span>
-<span class="sd">    hyper : None or list[str], optional</span>
+<span class="sd">    hyper : list[str], optional</span>
 <span class="sd">        List of hyperparameter names as specified in :func:`elicit.elicit.hyper`.</span>
 <span class="sd">        The values provided in **radius** and **mean** should follow the order</span>
 <span class="sd">        of hyperparameters indicated in this list.</span>
 <span class="sd">        If a float is passed to **radius** and **mean** this argument is not</span>
 <span class="sd">        necessary.</span>
-<span class="sd">        The default is ``None``.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -796,8 +811,8 @@ By Florence Bockting
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>
