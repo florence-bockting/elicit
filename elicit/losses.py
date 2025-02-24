@@ -6,14 +6,14 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 import bayesflow as bf
 
-from typing import Tuple
+from elicit.types import Target
+from typing import Tuple, Dict, List, Optional, Union
 
 tfd = tfp.distributions
 bfn = bf.networks
 
 
-def preprocess(elicited_statistics: dict[str, tf.Tensor]
-               ) -> dict[str, tf.Tensor]:
+def preprocess(elicited_statistics: Dict[str, tf.Tensor]) -> Dict[str, tf.Tensor]:
     """
     Preprocess elicited statistics such that they have the required format for
     computing the individual losses between expert- and simulated statistics.
@@ -63,9 +63,7 @@ def preprocess(elicited_statistics: dict[str, tf.Tensor]
         tensor_elicit = elicited_statistics[name]
 
         if tf.rank(tensor_elicit) > 2:
-            raise AssertionError(
-                "elicited statistics can only have 2 dimensions."
-                )
+            raise AssertionError("elicited statistics can only have 2 dimensions.")
 
         if tf.rank(tensor_elicit) == 1:
             # add a last axis for loss computation
@@ -79,10 +77,10 @@ def preprocess(elicited_statistics: dict[str, tf.Tensor]
 
 
 def indiv_loss(
-    elicit_expert: dict[str, tf.Tensor],  # shape: [1,num_stats]
-    elicit_training: dict[str, tf.Tensor],  # shape: [B,num_stats]
-    targets: dict,
-) -> list[tf.Tensor]:  # shape: []
+    elicit_expert: Dict[str, tf.Tensor],  # tensor shape: [1,num_stats]
+    elicit_training: Dict[str, tf.Tensor],  # tensor shape: [B,num_stats]
+    targets: List[Target],
+) -> List[tf.Tensor]:  # tensor shape: []
     """
     Computes the individual loss between expert data and model-simulated data.
 
@@ -92,7 +90,7 @@ def indiv_loss(
         dictionary including all preprocessed elicited statistics
     elicit_training : dict
         dictionary including all preprocessed model statistics
-    targets : dict
+    targets : list
         user-input from :func:`elicit.elicit.target`
 
     Returns
@@ -112,8 +110,7 @@ def indiv_loss(
         # broadcast expert loss to training data-shape
         elicit_expert_brdcst = tf.broadcast_to(
             elicit_expert[name],
-            shape=(elicit_training[name].shape[0],
-                   elicit_expert[name].shape[1]),
+            shape=(elicit_training[name].shape[0], elicit_expert[name].shape[1]),
         )
         # compute loss
         indiv_loss = loss_function(elicit_expert_brdcst, elicit_training[name])
@@ -123,14 +120,15 @@ def indiv_loss(
 
 
 def total_loss(
-    elicit_training: dict[str, tf.Tensor],  # shape: [B,num_stats]
-    elicit_expert: dict[str, tf.Tensor],  # shape: [1,num_stats]
-    epoch: int,
-    targets: dict,
-) -> Tuple[tf.Tensor,  # shape: []
-           list[tf.Tensor],  # shape: []
-           dict[str, tf.Tensor],  # shape: [1,num_stats]
-           dict[str, tf.Tensor]]:  # shape: [B,num_stats]
+    elicit_training: Dict[str, tf.Tensor],  # tensor shape: [B,num_stats]
+    elicit_expert: Dict[str, tf.Tensor],  # tensor shape: [1,num_stats]
+    targets: List[Target],
+) -> Tuple[
+    tf.Tensor,
+    List[tf.Tensor],
+    Dict[str, tf.Tensor],
+    Dict[str, tf.Tensor],
+]:  # shape: [B,num_stats]
     """
     Computes the weighted average across all individual losses between expert
     data and model simulations.
@@ -141,9 +139,7 @@ def total_loss(
         elicited statistics simulated by the model.
     elicit_expert : dict
         elicited statistics as queried from the expert.
-    epoch : int
-        epoch (iteration within optimization process).
-    targets : dict
+    targets : list
         user-input from :func:`elicit.elicit.target`
 
     Returns
@@ -164,13 +160,11 @@ def total_loss(
     elicit_expert_prep = preprocess(elicit_expert)
     elicit_training_prep = preprocess(elicit_training)
     # compute individual losses for each loss component
-    individual_losses = indiv_loss(elicit_expert_prep,
-                                   elicit_training_prep,
-                                   targets)
+    individual_losses = indiv_loss(elicit_expert_prep, elicit_training_prep, targets)
     # compute weighted average across individual losses to get the final loss
     # TODO: check whether order of loss_per_component and target quantities
     # is equivalent!
-    loss = 0
+    loss: float = 0.
     for i in range(len(targets)):
         loss += tf.multiply(individual_losses[i], targets[i]["weight"])
 
@@ -180,8 +174,8 @@ def total_loss(
 def L2(
     loss_component_expert: tf.Tensor,  # shape=[B, num_stats]
     loss_component_training: tf.Tensor,  # shape=[B, num_stats]
-    axis: int or None = None,
-    ord: str = "euclidean",
+    axis: Optional[int] = None,
+    ord: Union[str, int] = "euclidean",
 ) -> tf.Tensor:  # shape=[]
     """
     Wrapper around tf.norm that computes the norm of the difference between
@@ -190,11 +184,13 @@ def L2(
 
     Parameters
     ----------
-    correlation_training : A Tensor.
-    axis     : Any or None
+    loss_component_expert : tf.Tensor
+        preprocessed expert-elicited data
+    loss_component_training : tf.Tensor
+        preprocessed model-simulated data
+    axis : int, optional
         Axis along which to compute the norm of the difference.
-        Default is None.
-    ord      : int or str
+    ord : int or str
         Order of the norm. Supports 'euclidean' and other norms
         supported by tf.norm. Default is 'euclidean'.
     """
@@ -210,13 +206,12 @@ class MMD2:
 
         Parameters
         ----------
-        kernel : str
+        kernel : str, ("energy", "gaussian")
             kernel type used for computing the MMD.
-            Currently implemented kernels are "gaussian", "energy".
             When using a gaussian kernel an additional 'sigma' argument has to
             be passed.
             The default kernel is "energy".
-        **kwargs : any
+        **kwargs
             additional keyword arguments that might be required by the
             different individual kernels
 
@@ -244,16 +239,15 @@ class MMD2:
             self.sigma = kwargs["sigma"]
         # ensure correct kernel specification
         if kernel not in ["energy", "gaussian"]:
-            raise ValueError(
-                "'kernel' must be either 'energy' or 'gaussian' kernel."
-                )
+            raise ValueError("'kernel' must be either 'energy' or 'gaussian' kernel.")
 
         self.kernel_name = kernel
 
-    def __call__(self,
-                 x: tf.Tensor,  # shape: [B, num_stats]
-                 y: tf.Tensor  # shape: [B, num_stats]
-                 ) -> tf.Tensor:  # shape: []
+    def __call__(
+        self,
+        x: tf.Tensor,  # shape: [B, num_stats]
+        y: tf.Tensor,  # shape: [B, num_stats]
+    ) -> tf.Tensor:  # shape: []
         """
         Computes the biased, squared maximum mean discrepancy of two samples
 
@@ -304,9 +298,9 @@ class MMD2:
 
         return MMD2_mean
 
-    def clip(self,
-             u: tf.Tensor  # shape: [B, num_stats, num_stats]
-             ) -> tf.Tensor:  # shape: [B, num_stats, num_stats]
+    def clip(
+        self, u: tf.Tensor  # shape: [B, num_stats, num_stats]
+    ) -> tf.Tensor:  # shape: [B, num_stats, num_stats]
         """
         upper and lower clipping of value `u` to improve numerical stability
 
@@ -321,12 +315,12 @@ class MMD2:
             clipped u value with ``min=1e-8`` and ``max=1e10``.
 
         """
-        u_clipped = tf.clip_by_value(u, clip_value_min=1e-8,
-                                     clip_value_max=int(1e10))
+        u_clipped = tf.clip_by_value(u, clip_value_min=1e-8, clip_value_max=int(1e10))
         return u_clipped
 
-    def diag(self, xx: tf.Tensor  # shape: [B, num_stats, num_stats]
-             ) -> tf.Tensor:  # shape: [B, num_stats]
+    def diag(
+        self, xx: tf.Tensor  # shape: [B, num_stats, num_stats]
+    ) -> tf.Tensor:  # shape: [B, num_stats]
         """
         get diagonale elements of a matrix, whereby the first tensor dimension
         are batches and should not be considered to get diagonale elements.
@@ -345,9 +339,9 @@ class MMD2:
         diag = tf.experimental.numpy.diagonal(xx, axis1=1, axis2=2)
         return diag
 
-    def kernel(self, u: tf.Tensor,  # shape: [B, num_stats, num_stats]
-               kernel: str
-               ) -> tf.Tensor:  # shape: [B, num_stats, num_stats]
+    def kernel(
+        self, u: tf.Tensor, kernel: str  # shape: [B, num_stats, num_stats]
+    ) -> tf.Tensor:  # shape: [B, num_stats, num_stats]
         """
         Kernel used in MMD to compute discrepancy between samples.
 
@@ -355,7 +349,7 @@ class MMD2:
         ----------
         u : tensor, shape=[B,num_stats,num_stats]
             squared distance between samples.
-        kernel : str
+        kernel : str, ("energy", "gaussian")
             name of kernel used for computing discrepancy.
 
         Returns

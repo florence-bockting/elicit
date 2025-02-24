@@ -10,7 +10,7 @@ import tensorflow as tf
 import itertools
 import pandas as pd
 
-from typing import Tuple
+from typing import Tuple, Union, Optional
 
 
 def initialization(eliobj, cols: int = 4, **kwargs) -> None:
@@ -117,7 +117,7 @@ def initialization(eliobj, cols: int = 4, **kwargs) -> None:
     plt.show()
 
 
-def loss(eliobj, **kwargs) -> None:
+def loss(eliobj, weighted: bool = True, **kwargs) -> None:
     """
     plots the total loss and the loss per component.
 
@@ -149,6 +149,13 @@ def loss(eliobj, **kwargs) -> None:
     eliobj_res, eliobj_hist, parallel, n_reps = _check_parallel(eliobj)
     # names of loss_components
     names_losses = eliobj_res["elicited_statistics"].keys()
+    # get weights in targets
+    if weighted:
+        in_title="weighted "
+        weights=[eliobj.targets[i]["weight"] for i in range(len(eliobj.targets))]
+    else:
+        in_title=""
+        weights=[1.]*len(eliobj.targets)
     # check chains that yield NaN
     if parallel:
         fails, success, success_name = _check_NaN(eliobj, n_reps)
@@ -189,15 +196,14 @@ def loss(eliobj, **kwargs) -> None:
             # preprocess loss_component results
             indiv_losses = tf.stack(eliobj.history[j]["loss_component"])
             if j==0:
-                axs[1].plot(indiv_losses[:, i], label=name, lw=2,
+                axs[1].plot(indiv_losses[:, i]*weights[i], label=name, lw=2,
                             alpha=0.5)
             else:
-                axs[1].plot(indiv_losses[:, i], lw=2,
-                            alpha=0.5)
+                axs[1].plot(indiv_losses[:, i]*weights[i], lw=2, alpha=0.5)
         axs[1].legend(fontsize="small", handlelength=0.4, frameon=False)
     [
         axs[i].set_title(t, fontsize="small")
-        for i, t in enumerate(["total loss", "individual losses"])
+        for i, t in enumerate(["total loss", in_title+"individual losses"])
     ]
     for i in range(2):
         axs[i].set_xlabel("epochs", fontsize="small")
@@ -207,7 +213,7 @@ def loss(eliobj, **kwargs) -> None:
         axs[i].tick_params(axis="x", labelsize="x-small")
     plt.show()
 
-def hyperparameter(eliobj, cols: int = 4, span: int = 30, **kwargs) -> None:
+def hyperparameter(eliobj, cols: int = 4, **kwargs) -> None:
     """
     plots the convergence of each hyperparameter across epochs.
 
@@ -292,7 +298,7 @@ def hyperparameter(eliobj, cols: int = 4, span: int = 30, **kwargs) -> None:
     plt.show()
 
 
-def prior_joint(eliobj, idx: int or list or None = None, **kwargs) -> None:
+def prior_joint(eliobj, idx: Optional[Union[int,list]] = None, **kwargs) -> None:
     """
     plot learned prior distributions of each model parameter based on prior
     samples from last epoch. If parallelization has been used, select which
@@ -382,8 +388,7 @@ def prior_joint(eliobj, idx: int or list or None = None, **kwargs) -> None:
     plt.show()
 
 
-def prior_marginals(eliobj, cols: int = 4, constraints: dict or None=None,
-                    **kwargs) -> None:
+def prior_marginals(eliobj, cols: int = 4, **kwargs) -> None:
     """
     plots the convergence of each hyperparameter across epochs.
 
@@ -394,12 +399,6 @@ def prior_marginals(eliobj, cols: int = 4, constraints: dict or None=None,
     cols : int, optional
         number of columns for arranging the subplots in the figure.
         The default is ``4``.
-    constraints : dict or None
-        constraints that apply to the model parameters. *Keys* refer to the
-        name of the model parameter that should be constraint. *Values* refer
-        to the constraint. Currently only 'positive' as constraint is supported.
-        Set the argument to None if no constraints should be specified.
-        The default value is ``None``.
     **kwargs : any, optional
         additional keyword arguments that can be passed to specify
         `plt.subplots() <https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html>`_
@@ -407,10 +406,6 @@ def prior_marginals(eliobj, cols: int = 4, constraints: dict or None=None,
     Examples
     --------
     >>> el.plots.prior_marginals(eliobj, figuresize=(8,3))
-
-    >>> el.plots.prior_marginals(eliobj,
-    >>>                          constraints=dict(sigma="positive"),
-    >>>                          figuresize=(8,3))
 
     Raises
     ------
@@ -781,6 +776,7 @@ def prior_averaging(eliobj, cols: int=4, n_sim: int=10_000,
     # prepare plotting
     n_par = len(eliobj.parameters)
     name_par = [eliobj.parameters[i]["name"] for i in range(n_par)]
+    label_avg = [" "]*(len(name_par)-1)+["average"]
     n_reps = len(eliobj.results)
     # prepare plot axes
     cols, rows, k = _prep_subplots(eliobj, cols, n_par)
@@ -820,7 +816,7 @@ def prior_averaging(eliobj, cols: int=4, n_sim: int=10_000,
 
     # plot individual priors and averaged prior
     if rows == 1:
-        for c, par in zip(tf.range(cols), name_par):
+        for c, par, lab in zip(tf.range(cols), name_par, label_avg):
             for i in success:
                 # reshape samples by merging batches and number of samples
                 prior = tf.reshape(eliobj.results[i]["prior_samples"],
@@ -829,7 +825,7 @@ def prior_averaging(eliobj, cols: int=4, n_sim: int=10_000,
                             alpha=0.5)
             avg_prior = tf.reshape(averaged_priors,(B * n_sim, n_par))
             sns.kdeplot(avg_prior[:,c], color="red", ax=subfig1[c],
-                        label="average")
+                        label=lab)
             subfig1[c].set_title(f"{par}", fontsize="small")
             subfig1[c].tick_params(axis="y", labelsize="x-small")
             subfig1[c].tick_params(axis="x", labelsize="x-small")
@@ -843,8 +839,8 @@ def prior_averaging(eliobj, cols: int=4, n_sim: int=10_000,
         for k_idx in range(k):
             subfig1[cols - k_idx - 1].set_axis_off()
     else:
-        for j, ((r, c), par) in enumerate(zip(
-            itertools.product(tf.range(rows), tf.range(cols)), name_par
+        for j, ((r, c), par, lab) in enumerate(zip(
+            itertools.product(tf.range(rows), tf.range(cols)), name_par, label_avg
         )):
             for i in success:
                 # reshape samples by merging batches and number of samples
@@ -854,7 +850,7 @@ def prior_averaging(eliobj, cols: int=4, n_sim: int=10_000,
                             lw=2, alpha=0.5)
             avg_prior = tf.reshape(averaged_priors,(B * n_sim, n_par))
             sns.kdeplot(avg_prior[:, j], color="red", ax=subfig1[r, c],
-                        label="average")
+                        label=lab)
             subfig1[r, c].set_title(f"{par}", fontsize="small")
             subfig1[r, c].tick_params(axis="y", labelsize="x-small")
             subfig1[r, c].tick_params(axis="x", labelsize="x-small")

@@ -6,23 +6,25 @@ import tensorflow as tf
 import tensorflow_probability as tfp
 import bayesflow as bf
 
+from typing import Dict, List, Callable
 from elicit.extras import utils
+from elicit.types import Target
 
 tfd = tfp.distributions
 bfn = bf.networks
 
 
 # TODO: Update Custom Target Function
-def use_custom_functions(simulations, custom_func):
+def use_custom_functions(simulations: dict, custom_func: Callable) -> Callable:
     vars_from_func = custom_func.__code__.co_varnames
-    res = {f"{var}":simulations[var] for var in vars_from_func if var in simulations}
+    res = {f"{var}": simulations[var] for var in vars_from_func if var in simulations}
     return custom_func(**res)
 
 
 def computation_elicited_statistics(
-        target_quantities: dict[str, tf.Tensor],  # shape=[B, num_samples, num_obs]
-        targets: list[dict]
-        ) -> dict[str, tf.Tensor]:  # shape=[B, num_stats]
+    target_quantities: Dict[str, tf.Tensor],  # shape=[B, num_samples, num_obs]
+    targets: List[Target],
+) -> Dict[str, tf.Tensor]:  # shape=[B, num_stats]
     """
     Computes the elicited statistics from the target quantities by applying a
     prespecified elicitation technique.
@@ -47,47 +49,48 @@ def computation_elicited_statistics(
         # use custom method if specified otherwise use built-in methods
         if targets[i]["query"]["name"] == "custom":
             elicited_statistic = use_custom_functions(
-                target_quantities,
-                targets[i]["query"]["value"]
+                target_quantities, targets[i]["query"]["value"]
             )
-            elicits_res[f"{targets[i]['query']['func_name']}_{targets[i]['name']}"] = elicited_statistic
+            elicits_res[f"{targets[i]['query']['func_name']}_{targets[i]['name']}"] = (
+                elicited_statistic
+            )
 
         if targets[i]["query"]["name"] == "identity":
-            elicits_res[f"identity_{targets[i]['name']}"
-                        ] = target_quantities[targets[i]['name']]
+            elicits_res[f"identity_{targets[i]['name']}"] = target_quantities[
+                targets[i]["name"]
+            ]
 
         if targets[i]["query"]["name"] == "pearson_correlation":
             # compute correlation between model parameters (used for
             # learning correlation structure of joint prior)
             elicited_statistic = utils.pearson_correlation(
-                target_quantities[targets[i]['name']])
+                target_quantities[targets[i]["name"]]
+            )
             # save correlation in result dictionary
-            elicits_res[f"cor_{targets[i]['name']}"
-                        ] = elicited_statistic
+            elicits_res[f"cor_{targets[i]['name']}"] = elicited_statistic
 
         if targets[i]["query"]["name"] == "quantiles":
             quantiles = targets[i]["query"]["value"]
 
             # reshape target quantity
-            if tf.rank(target_quantities[targets[i]['name']]) == 3:
+            if tf.rank(target_quantities[targets[i]["name"]]) == 3:
                 quan_reshaped = tf.reshape(
-                    target_quantities[targets[i]['name']],
+                    target_quantities[targets[i]["name"]],
                     shape=(
-                        target_quantities[targets[i]['name']].shape[0],
-                        target_quantities[targets[i]['name']].shape[1]
-                        * target_quantities[targets[i]['name']].shape[2],
+                        target_quantities[targets[i]["name"]].shape[0],
+                        target_quantities[targets[i]["name"]].shape[1]
+                        * target_quantities[targets[i]["name"]].shape[2],
                     ),
                 )
-            if tf.rank(target_quantities[targets[i]['name']]) == 2:
-                quan_reshaped = target_quantities[targets[i]['name']]
+            if tf.rank(target_quantities[targets[i]["name"]]) == 2:
+                quan_reshaped = target_quantities[targets[i]["name"]]
 
             # compute quantiles
             computed_quantiles = tfp.stats.percentile(
                 quan_reshaped, q=quantiles, axis=-1
             )
             # bring quantiles to the last dimension
-            elicited_statistic = tf.einsum("ij...->ji...",
-                                           computed_quantiles)
+            elicited_statistic = tf.einsum("ij...->ji...", computed_quantiles)
             elicits_res[f"quantiles_{targets[i]['name']}"] = elicited_statistic
 
     # return results
@@ -95,9 +98,10 @@ def computation_elicited_statistics(
 
 
 def computation_target_quantities(
-        model_simulations: dict[str,tf.Tensor],
-        prior_samples: tf.Tensor, # shape=[B,rep,num_param]
-        targets: dict) -> dict[str, tf.Tensor]:
+    model_simulations: Dict[str, tf.Tensor],
+    prior_samples: tf.Tensor,  # shape=[B,rep,num_param]
+    targets: List[Target],
+) -> Dict[str, tf.Tensor]:
     """
     Computes target quantities from model simulations.
 
@@ -126,10 +130,10 @@ def computation_target_quantities(
         if tar["query"]["name"] == "pearson_correlation":
             target_quantity = prior_samples
         # use custom target method
-        elif (
-            tar["target_method"] is not None
-        ):
-            target_quantity = use_custom_functions(model_simulations, tar["target_method"])
+        elif tar["target_method"] is not None:
+            target_quantity = use_custom_functions(
+                model_simulations, tar["target_method"]
+            )
         # target quantity equal to output of GenerativeModel
         else:
             target_quantity = model_simulations[tar["name"]]

@@ -11,5 +11,6 @@ from . import simulations  # noqa
 from . import targets  # noqa
 from . import utils  # noqa
 from . import plots  # noqa
+from . import types  # noqa
 
 from .elicit import *  # noqa

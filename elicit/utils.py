@@ -4,18 +4,33 @@
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-import elicit as el
 import pandas as pd
 import pickle
 import os
 import warnings
+import elicit as el
 
-from typing import Tuple
+from typing import Tuple, Any, Optional, Callable, Dict, List
+from elicit.simulations import Priors, simulate_from_generator
+from elicit.targets import (
+    computation_target_quantities,
+    computation_elicited_statistics,
+)
+from elicit.types import (
+    Parallel,
+    SaveHist,
+    SaveResults,
+    Trainer,
+    Parameter,
+    Target,
+    ExpertDict,
+    NFDict,
+)
 
 tfd = tfp.distributions
 
 
-def save_as_pkl(obj: any, save_dir: str) -> None:
+def save_as_pkl(obj: Any, save_dir: str) -> None:
     """
     Helper functions to save a file as pickle.
 
@@ -35,14 +50,14 @@ def save_as_pkl(obj: any, save_dir: str) -> None:
     >>> save_as_pkl(obj, "results/file.pkl")
 
     """
-    # if directory does not exists, create it
+    # if directory does not exist, create it
     os.makedirs(os.path.dirname(save_dir), exist_ok=True)
     # save obj to location as pickle
     with open(save_dir, "wb") as file:
         pickle.dump(obj, file=file)
 
 
-def identity(x: any) -> any:
+def identity(x: float) -> Any:
     """
     identity function. Returns the input
 
@@ -81,7 +96,7 @@ class DoubleBound:
         self.lower = lower
         self.upper = upper
 
-    def logit(self, u: float):
+    def logit(self, u: float) -> float:
         r"""
         Helper function that implements the logit transformation for
         :math:`u \in (0,1)`:
@@ -107,7 +122,7 @@ class DoubleBound:
         v = tf.cast(v, dtype=tf.float32)
         return v
 
-    def inv_logit(self, v: float):
+    def inv_logit(self, v: float) -> float:
         r"""
         Helper function that implements the inverse-logit transformation (i.e.,
         the logistic sigmoid for :math:`v \in (-\infty,+\infty)`:
@@ -133,7 +148,7 @@ class DoubleBound:
         u = tf.cast(u, dtype=tf.float32)
         return u
 
-    def forward(self, x: float):
+    def forward(self, x: float) -> float:
         r"""
         scaled and translated logit transform of variable x with ``lower`` and
         ``upper`` bound into an unconstrained variable y.
@@ -159,7 +174,7 @@ class DoubleBound:
         y = tf.cast(y, dtype=tf.float32)
         return y
 
-    def inverse(self, y: float):
+    def inverse(self, y: float) -> float:
         r"""
         inverse of the log-odds transform applied to the unconstrained
         variable y in order to transform it into a constrained variable x
@@ -204,7 +219,7 @@ class LowerBound:
         """  # noqa: E501
         self.lower = lower
 
-    def forward(self, x: float):
+    def forward(self, x: float) -> float:
         r"""
         inverse-softplus transform of variable x with ``lower`` bound into an
         unconstrained variable y.
@@ -230,7 +245,7 @@ class LowerBound:
         y = tf.cast(y, dtype=tf.float32)
         return y
 
-    def inverse(self, y: float):
+    def inverse(self, y: float) -> float:
         r"""
         softplus transform of unconstrained variable y into a constrained
         variable x with ``lower`` bound.
@@ -274,7 +289,7 @@ class UpperBound:
         """  # noqa: E501
         self.upper = upper
 
-    def forward(self, x: float):
+    def forward(self, x: float) -> float:
         r"""
         inverse-softplus transform of variable x with ``upper`` bound into an
         unconstrained variable y.
@@ -300,7 +315,7 @@ class UpperBound:
         y = tf.cast(y, dtype=tf.float32)
         return y
 
-    def inverse(self, y: float):
+    def inverse(self, y: float) -> float:
         r"""
         softplus transform of unconstrained variable y into a constrained
         variable x with ``upper`` bound.
@@ -328,9 +343,8 @@ class UpperBound:
 
 
 def one_forward_simulation(
-    prior_model: el.simulations.Priors, trainer: dict, model: dict,
-    targets: list[dict], seed: int
-    ) -> Tuple[dict, tf.Tensor, dict, dict]:  # noqa: E125
+    prior_model: Priors, model: Dict[str, Any], targets: List[Target], seed: int
+) -> Tuple[dict, tf.Tensor, dict, dict]:  # noqa: E125
     """
     One forward simulation from prior samples to elicited statistics.
 
@@ -338,16 +352,16 @@ def one_forward_simulation(
     ----------
     prior_model : instance of Priors class objects
         initialized prior distributions which can be used for sampling.
-    trainer : callable
-        specification of training settings and meta-information for
-        workflow using :func:`elicit.elicit.trainer`
-    model : callable
+    model : dict
         specification of generative model using :func:`elicit.elicit.model`.
     targets : list
         list of target quantities specified with :func:`elicit.elicit.target`.
+    seed: int
+        random seed.
 
     Returns
     -------
+
     elicited_statistics : dict
         dictionary containing the elicited statistics that can be used to
         compute the loss components
@@ -358,8 +372,6 @@ def one_forward_simulation(
         for the model parameters
     target_quantities : dict
         target quantities as a function of the model simulations.
-    seed : int
-        internal seed for reproducible results
 
     """
     # set seed
@@ -368,55 +380,50 @@ def one_forward_simulation(
     prior_samples = prior_model()
     # simulate prior predictive distribution based on prior samples
     # and generative model
-    model_simulations = el.simulations.simulate_from_generator(
-        prior_samples, seed, model
-    )
+    model_simulations = simulate_from_generator(prior_samples, seed, model)
     # compute the target quantities
-    target_quantities = el.targets.computation_target_quantities(
+    target_quantities = computation_target_quantities(
         model_simulations, prior_samples, targets
     )
     # compute the elicited statistics by applying a specific elicitation
     # method on the target quantities
-    elicited_statistics = el.targets.computation_elicited_statistics(
-        target_quantities, targets
-    )
-    return (elicited_statistics, prior_samples, model_simulations,
-            target_quantities)
+    elicited_statistics = computation_elicited_statistics(target_quantities, targets)
+    return (elicited_statistics, prior_samples, model_simulations, target_quantities)
 
 
 def get_expert_data(
-    trainer: dict,
-    model: dict,
-    targets: list[dict],
-    expert: dict,
-    parameters: list[dict],
-    network: dict,
-    seed: int
-) -> Tuple[dict[str, tf.Tensor], tf.Tensor]:
+    trainer: Trainer,
+    model: Dict[str, Any],
+    targets: List[Target],
+    expert: ExpertDict,
+    parameters: List[Parameter],
+    network: Optional[NFDict],
+    seed: int,
+) -> Tuple[Dict[str, tf.Tensor], Optional[tf.Tensor]]:
     """
     Wrapper for loading the training data which can be expert data or
     data simulations using a pre-defined ground truth.
 
     Parameters
     ----------
-    trainer : callable
+    trainer : dict
         specification of training settings and meta-information for
         workflow using :func:`trainer`
-    model : callable
+    model : dict
         specification of generative model using :func:`elicit.elicit.model`.
     targets : list
         list of target quantities specified with :func:`elicit.elicit.target`.
-    expert : callable
+    expert : dict
         provide input data from expert or simulate data from oracle with
         either the ``data`` or ``simulator`` method of the
         :mod:`elicit.elicit.Expert` module.
     parameters : list
         list of model parameters specified with :func:`elicit.elicit.parameter`.
-    network : callable or None
+    network : dict, optional
         specification of neural network using a method implemented in
         :mod:`elicit.networks`.
         Only required for ``deep_prior`` method. For ``parametric_prior``
-        use ``None``. Default value is ``None``.
+        use ``None``.
     seed : int
         internal seed for reproducible results
 
@@ -426,7 +433,7 @@ def get_expert_data(
         dictionary containing the training data. Must have same form as the
         model-simulated elicited statistics. Correct specification of
         keys can be checked using :func:`elicit.utils.get_expert_datformat`
-    expert_prior : tf.Tensor, shape: [B,num_samples,num_params]
+    expert_prior : tf.Tensor, shape: [B,num_samples,num_params] or None
         samples from ground truth. Exists only if expert data are simulated
         from an oracle. Otherwise this output is ``None``
 
@@ -442,7 +449,7 @@ def get_expert_data(
         # set seed
         tf.random.set_seed(seed)
         # sample from true priors
-        prior_model = el.simulations.Priors(
+        prior_model = Priors(
             ground_truth=True,
             init_matrix_slice=None,
             trainer=trainer,
@@ -453,21 +460,37 @@ def get_expert_data(
         )
         # compute elicited statistics and target quantities
         expert_data, expert_prior, *_ = one_forward_simulation(
-            prior_model, trainer, model, targets, seed
+            prior_model=prior_model, model=model, targets=targets, seed=seed
         )
-        return expert_data, expert_prior
+        return (expert_data, expert_prior)
     else:
         # load expert data from file
         expert_data = expert["data"]
-        return expert_data, None
+        return (expert_data, None)
 
 
 def save(
-    eliobj: callable,
-    name: str or None = None,
-    file: str or None = None,
+    eliobj,
+    name: Optional[str] = None,
+    file: Optional[str] = None,
     overwrite: bool = False,
 ) -> None:
+    """
+    saves the eliobj as pickle.
+
+    Parameters
+    ----------
+    eliobj: callable
+        instance of the :func:`elicit.elicit.Elicit` class.
+    name: str, optional
+        name of the saved .pkl file. File is saved as .results/{method}/{name}_{seed}.pkl
+    file: str, optional
+        path to file, including file name, e.g. file="res" (saved as res.pkl) or
+        file="method1/res" (saved as method1/res.pkl)
+    overwrite: bool
+        whether to overwrite existing file. Default value is False.
+
+    """
     # either name or file must be specified
     assert (name is None) ^ (file is None), (
         "Name and file cannot be both "
@@ -497,7 +520,7 @@ def save(
             )
 
         if user_ans == "n":
-            return "Process aborded. File is not overwritten."
+            print("Process aborded. File is not overwritten.")
 
     storage = dict()
     # user inputs
@@ -517,7 +540,7 @@ def save(
     print(f"saved in: {path}.pkl")
 
 
-def load(file: str) -> callable:
+def load(file: str) -> Callable:
     """
     loads a saved ``eliobj`` from specified path.
 
@@ -553,24 +576,22 @@ def load(file: str) -> callable:
 
 
 def parallel(
-        runs: int = 4,
-        cores: None or int = None,
-        seeds : list = None
-        ) -> dict:
+    runs: int = 4, cores: Optional[int] = None, seeds: Optional[list] = None
+) -> Parallel:
     """
     Specification for parallelizing training by running multiple training
     instances with different seeds simultaneously.
 
     Parameters
     ----------
-    runs: int, optional
+    runs: int
         Number of replication. The default is ``4``.
     cores : int, optional
         Number of cores that should be used. The default is ``None`` which implies ``cores=runs``.
     seeds : list, optional
         A list of seeds. If ``None`` seeds are drawn from a Uniform(0,999999)
         distribution. The seed information corresponding to each chain is
-        stored in ``eliobj.results``. The default is ``None``.
+        stored in ``eliobj.results``.
 
     Returns
     -------
@@ -578,11 +599,10 @@ def parallel(
         dictionary containing the parallelization settings.
 
     """
-    parallel_dict = dict(
-        runs=runs,
-        cores=cores,
-        seeds=seeds
-        )
+    parallel_dict: Parallel = dict(runs=runs, cores=cores, seeds=seeds)
+
+    if cores is None:
+        parallel_dict["cores"] = runs
 
     return parallel_dict
 
@@ -593,7 +613,7 @@ def save_history(
     time: bool = True,
     hyperparameter: bool = True,
     hyperparameter_gradient: bool = True,
-) -> dict:
+) -> SaveHist:
     """
     Controls whether sub-results of the history object should be included
     or excluded. Results are saved across epochs. By default all
@@ -601,19 +621,19 @@ def save_history(
 
     Parameters
     ----------
-    loss : bool, optional
+    loss : bool
         total loss per epoch. The default is ``True``.
-    loss_component : bool, optional
+    loss_component : bool
         loss per loss-component per epoch. The default is ``True``.
-    time : bool, optional
+    time : bool
         time in sec per epoch. The default is ``True``.
-    hyperparameter : bool, optional
+    hyperparameter : bool
         'parametric_prior' method: Trainable hyperparameters of parametric
         prior distributions.
         'deep_prior' method: Mean and standard deviation of each marginal
         from the joint prior.
         The default is ``True``.
-    hyperparameter_gradient : bool, optional
+    hyperparameter_gradient : bool
         Gradients of the hyperparameter. Only for 'parametric_prior' method.
         The default is ``True``.
 
@@ -650,8 +670,9 @@ def save_history(
             + " information these plots can't be used."
         )
 
-    save_hist_dict = dict(
+    save_hist_dict: SaveHist = dict(
         loss=loss,
+        time=time,
         loss_component=loss_component,
         hyperparameter=hyperparameter,
         hyperparameter_gradient=hyperparameter_gradient,
@@ -671,7 +692,7 @@ def save_results(
     init_matrix: bool = True,
     loss_tensor_expert: bool = True,
     loss_tensor_model: bool = True,
-) -> dict:
+) -> SaveResults:
     """
     Controls whether sub-results of the result object should be included
     or excluded in the final result file. Results are based on the
@@ -680,39 +701,39 @@ def save_results(
 
     Parameters
     ----------
-    target_quantities : bool, optional
+    target_quantities : bool
         simulation-based target quantities. The default is ``True``.
-    elicited_statistics : bool, optional
+    elicited_statistics : bool
         simulation-based elicited statistics. The default is ``True``.
-    prior_samples : bool, optional
+    prior_samples : bool
         samples from simulation-based prior distributions.
         The default is ``True``.
-    model_samples : bool, optional
+    model_samples : bool
         output variables from the simulation-based generative model.
         The default is ``True``.
-    expert_elicited_statistics : bool, optional
+    expert_elicited_statistics : bool
         expert-elicited statistics. The default is ``True``.
-    expert_prior_samples : bool, optional
+    expert_prior_samples : bool
         if oracle is used: samples from the true prior distribution,
         otherwise it is None. The default is ``True``.
-    init_loss_list : bool, optional
+    init_loss_list : bool
         initialization phase: Losses related to the samples drawn from the
         initialization distribution.
         Only included for method 'parametric_prior'.
         The default is ``True``.
-    init_prior : bool, optional
+    init_prior : bool
         initialized elicit model object including the trainable variables.
         Only included for method 'parametric_prior'.
         The default is ``True``.
-    init_matrix : bool, optional
+    init_matrix : bool
         initialization phase: samples drawn from the initialization
         distribution for each hyperparameter.
         Only included for method 'parametric_prior'.
         The default is ``True``.
-    loss_tensor_expert : bool, optional
+    loss_tensor_expert : bool
         expert term in loss component for computing the discrepancy.
         The default is ``True``.
-    loss_tensor_model : bool, optional
+    loss_tensor_model : bool
         simulation-based term in loss component for computing the
         discrepancy. The default is ``True``.
 
@@ -773,7 +794,7 @@ def save_results(
             + " can't be used."
         )
 
-    save_res_dict = dict(
+    save_res_dict: SaveResults = dict(
         target_quantities=target_quantities,
         elicited_statistics=elicited_statistics,
         prior_samples=prior_samples,
@@ -789,11 +810,12 @@ def save_results(
     return save_res_dict
 
 
-def clean_savings(history: dict, 
-                  results: dict,
-                  save_history: dict,
-                  save_results: dict
-                  ) -> Tuple[dict, dict]:
+def clean_savings(
+    history: dict,
+    results: dict,
+    save_history: SaveHist,
+    save_results: SaveResults,
+) -> Tuple[dict, dict]:
     """
     Parameters
     ----------
@@ -805,12 +827,12 @@ def clean_savings(history: dict,
         results that are saved for the last epoch only including prior_samples,
         elicited_statistics, target_quantities, etc. See :func:`save_results`
         for complete list.
-    save_history : callable, :func:`elicit.utils.save_history`
+    save_history : dict, :func:`elicit.utils.save_history`
         Exclude or include sub-results in the final result file.
         In the ``history`` object are all results that are saved across epochs.
         For usage information see
         `How-To: Save and load the eliobj <https://florence-bockting.github.io/prior_elicitation/howto/saving_loading.html>`_
-    save_results : callable, :func:`elicit.utils.save_results`
+    save_results : dict, :func:`elicit.utils.save_results`
         Exclude or include sub-results in the final result file.
         In the ``results`` object are all results that are saved for the last
         epoch only. For usage information see
@@ -833,7 +855,7 @@ def clean_savings(history: dict,
     return results, history
 
 
-def get_expert_datformat(targets: list[dict]) -> dict[str, list]:
+def get_expert_datformat(targets: List[Target]) -> Dict[str, list]:
     """
     helper function for the user to inspect which data format for the expert
     data is expected by the method.
@@ -852,6 +874,8 @@ def get_expert_datformat(targets: list[dict]) -> dict[str, list]:
     elicit_dict = dict()
     for tar in targets:
         query = tar["query"]["name"]
+        if query == "custom":
+            query = tar["query"]["func_name"]
         target = tar["name"]
         key = query + "_" + target
         elicit_dict[key] = list()
@@ -859,8 +883,9 @@ def get_expert_datformat(targets: list[dict]) -> dict[str, list]:
     return elicit_dict
 
 
-def softmax_gumbel_trick(epred: tf.Tensor, likelihood: callable,
-                         upper_thres: float, temp: float=1.6, **kwargs):
+def softmax_gumbel_trick(
+    likelihood: Callable, upper_thres: float, temp: float = 1.6, **kwargs
+):
     """
     The softmax-gumbel trick computes a continuous approximation of ypred from
     a discrete likelihood and thus allows for the computation of gradients for
@@ -884,9 +909,7 @@ def softmax_gumbel_trick(epred: tf.Tensor, likelihood: callable,
 
     Parameters
     ----------
-    epred : tf.Tensor, shape = [B, num_samples, num_obs]
-        simulated linear predictor from the model simulations 
-    likelihood : tfp.distributions object, shape = [B, num_samples, num_obs, 1]
+    likelihood : Callable, tfp.distributions object, shape = [B, num_samples, num_obs, 1]
         likelihood function used in the generative model.
         Must be a tfp.distributions object.
     upper_thres : float
@@ -924,7 +947,7 @@ def softmax_gumbel_trick(epred: tf.Tensor, likelihood: callable,
 
     KeyError
         if ``**kwargs`` is not in function arguments. It is required to pass
-        the **kwargs argument as it is used for extracting internally 
+        the **kwargs argument as it is used for extracting internally
         information about the seed.
 
     """
@@ -932,36 +955,32 @@ def softmax_gumbel_trick(epred: tf.Tensor, likelihood: callable,
     if len(likelihood.batch_shape) != 4:
         raise ValueError(
             "The 'likelihood' in the generative model must have"
-            +" batch_shape = (B, num_samples, num_obs, 1)."
-            +" The additional final axis is required by the softmax-gumbel"
-            +" computation. Use for example `tf.expand_dims(mu,-1)` for"
-            +" expanding the batch-shape of the likelihood."
-            )
+            + " batch_shape = (B, num_samples, num_obs, 1)."
+            + " The additional final axis is required by the softmax-gumbel"
+            + " computation. Use for example `tf.expand_dims(mu,-1)` for"
+            + " expanding the batch-shape of the likelihood."
+        )
     # check value/type of likelihood object
     if likelihood.name.lower() not in dir(tfd):
         raise ValueError(
             "Likelihood in generative model must be a tfp.distribution object."
-            )
+        )
     if "seed" not in list(kwargs.keys()):
         raise KeyError(
             "Please provide the **kwargs argument in the el.utils.softmax-"
-              +"gumble function. This is required for extracting internally"
-              +" information about the seed.")
+            + "gumble function. This is required for extracting internally"
+            + " information about the seed."
+        )
 
     # set seed
     tf.random.set_seed(kwargs["seed"])
-    # get batch size
-    B = epred.shape[0]
-    # get number of simulations from priors
-    S = epred.shape[1]
-    # get number of observations
-    number_obs = epred.shape[2]
+    # get batch size, num_samples, num_observations
+    B, S, number_obs = likelihood.batch_shape
     # constant outcome vector (including zero outcome)
     thres = upper_thres
     c = tf.range(thres + 1, delta=1, dtype=tf.float32)
     # broadcast to shape (B, rep, outcome-length)
-    c_brct = tf.broadcast_to(c[None, None, None, :], shape=(B, S, number_obs,
-                                                            len(c)))
+    c_brct = tf.broadcast_to(c[None, None, None, :], shape=(B, S, number_obs, len(c)))
     # compute pmf value
     pi = likelihood.prob(c_brct)
     # prevent underflow
@@ -973,7 +992,8 @@ def softmax_gumbel_trick(epred: tf.Tensor, likelihood: callable,
     # softmax gumbel trick
     w = tf.nn.softmax(
         tf.math.divide(
-            tf.math.add(tf.math.log(pi), g), temp,
+            tf.math.add(tf.math.log(pi), g),
+            temp,
         )
     )
     # reparameterization/linear transformation

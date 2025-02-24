@@ -5,13 +5,15 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
 
+from elicit.types import NFDict
+from typing import Callable
+
 tfd = tfp.distributions
 
 
 def NF(
-    inference_network: callable, network_specs: dict,
-    base_distribution: callable
-) -> dict:
+    inference_network: Callable, network_specs: dict, base_distribution: Callable
+) -> NFDict:
     """
     specification of the normalizing flow used from BayesFlow library
 
@@ -25,8 +27,6 @@ def NF(
     base_distribution : callable
         Base distribution from which should be sampled during learning.
         Normally the base distribution is a multivariate normal.
-    input_dim : int
-        number of model parameters.
 
     Returns
     -------
@@ -34,7 +34,7 @@ def NF(
         dictionary specifying the normalizing flow settings.
 
     """
-    nf_dict = dict(
+    nf_dict: NFDict = dict(
         inference_network=inference_network,
         network_specs=network_specs,
         base_distribution=base_distribution,
@@ -44,7 +44,7 @@ def NF(
 
 
 class BaseNormal:
-    def __call__(self, num_params: int) -> callable:
+    def __call__(self, num_params: int) -> Callable:
         """
         Multivariate standard normal distribution with as many dimensions as
         parameters in the generative model.

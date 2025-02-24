@@ -4,8 +4,18 @@
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-import elicit as el
 
+import elicit as el
+from elicit.types import (
+    Parameter,
+    Initializer,
+    Trainer,
+    Target,
+    ExpertDict,
+    NF,
+    Uniform,
+)
+from typing import Union, Optional, Any, Iterable, List, Dict
 from scipy.stats import qmc
 from tqdm import tqdm
 
@@ -14,12 +24,12 @@ tfd = tfp.distributions
 
 def uniform_samples(
     seed: int,
-    hyppar: list[str] or None,
+    hyppar: List[str],
     n_samples: int,
     method: str,
-    mean: float or list[float],
-    radius: float or list[float],
-    parameters: dict,
+    mean: Union[float, Iterable[float]],
+    radius: Union[float, Iterable[float]],
+    parameters: List[Parameter],
 ):
     """
     Sample from uniform distribution for each hyperparameter.
@@ -28,7 +38,7 @@ def uniform_samples(
     ----------
     seed : int
         user-specified seed defined in :func:`elicit.elicit.trainer`.
-    hyppar : list or None
+    hyppar : list
         list of hyperparameter names (strings) declaring the order for the
         list of **means** and **radius**.
         If **means** and **radius** are each a float, then this number is
@@ -46,8 +56,8 @@ def uniform_samples(
     radius : float or list
         Specification of the uniform distribution. The uniform distribution
         ranges from (**mean-radius**) to (**mean+radius**).
-    parameters : dict
-        dictionary including all information about the (hyper-)parameters.
+    parameters : list
+        list including dictionary with all information about the (hyper-)parameters.
         Can be retrieved as attribute from the initialized
         :mod:`elicit.elicit.Elicit` obj (i.e., ``eliobj.parameters``)
 
@@ -77,16 +87,24 @@ def uniform_samples(
     if not isinstance(method, str):
         raise TypeError("method must be a string.")
     if method not in ["sobol", "lhs", "random"]:
-        raise ValueError(
-            "Unsupported method. Choose from 'sobol', 'lhs', or 'random'."
-            )
+        raise ValueError("Unsupported method. Choose from 'sobol', 'lhs', or 'random'.")
 
     # counter number of hyperparameters
     n_hypparam = 0
-    name_hyper = list()
+    name_hyper: List[str] = []
     res_dict = dict()
 
     if hyppar is None:
+        if type(mean) is list:
+            raise ValueError(
+                "If different mean values should be specified per hyperparameter, the hyppar argument"
+                + " cannot be None."
+            )
+        if type(radius) is list:
+            raise ValueError(
+                "If different radius values should be specified per hyperparameter, the hyppar argument"
+                + " cannot be None."
+            )
         for i in range(len(parameters)):
             for hyperparam in parameters[i]["hyperparams"]:
                 dim = parameters[i]["hyperparams"][hyperparam]["dim"]
@@ -112,17 +130,18 @@ def uniform_samples(
             ).sample((n_samples, n_hypparam))
         # Inverse transform
         if method == "sobol" or method == "lhs":
-            sample_dat = tf.cast(tf.convert_to_tensor(sample_data),
-                                 tf.float32)
+            sample_dat = tf.cast(tf.convert_to_tensor(sample_data), tf.float32)
             uniform_samples = tfd.Uniform(
                 tf.subtract(mean, radius), tf.add(mean, radius)
             ).quantile(sample_dat)
         # store initialization results per hyperparameter
         for j, name in zip(range(n_hypparam), name_hyper):
-            res_dict[name] = uniform_samples[:,j]
+            res_dict[name] = uniform_samples[:, j]
     else:
-        uniform_samples = []
-
+        if (type(mean) is not list) or (type(radius) is not list):
+            raise ValueError(
+                "mean and radius arguments of function uniform_samples must be of type list."
+            )
         # initialize sampler
         if method == "sobol":
             sampler = qmc.Sobol(d=1, seed=seed)
@@ -135,33 +154,31 @@ def uniform_samples(
             j = tf.cast(j, tf.float32)
 
             if method == "random":
-                uniform_samples = tfd.Uniform(
-                    tf.subtract(i, j), tf.add(i, j)
-                ).sample((n_samples, 1))
+                uniform_samples = tfd.Uniform(tf.subtract(i, j), tf.add(i, j)).sample(
+                    (n_samples, 1)
+                )
             else:
                 sample_data = sampler.random(n=n_samples)
                 # Inverse transform
-                sample_dat = tf.cast(
-                    tf.convert_to_tensor(sample_data), tf.float32
+                sample_dat = tf.cast(tf.convert_to_tensor(sample_data), tf.float32)
+                uniform_samples = tfd.Uniform(tf.subtract(i, j), tf.add(i, j)).quantile(
+                    sample_dat
                 )
-                uniform_samples = tfd.Uniform(
-                    tf.subtract(i, j), tf.add(i, j)
-                ).quantile(sample_dat)
 
             res_dict[n] = tf.squeeze(uniform_samples, axis=-1)
     return res_dict
 
 
 def init_runs(
-    expert_elicited_statistics: dict,
-    initializer: dict,
-    parameters: dict,
-    trainer: dict,
-    model: dict,
-    targets: dict,
-    network: dict,
-    expert: dict,
-    seed: int
+    expert_elicited_statistics: Dict[str, tf.Tensor],
+    initializer: Initializer,
+    parameters: List[Parameter],
+    trainer: Trainer,
+    model: Dict[str, Any],
+    targets: List[Target],
+    network: Optional,
+    expert: ExpertDict,
+    seed: int,
 ):
     """
     Computes the discrepancy between expert data and simulated data for
@@ -173,15 +190,15 @@ def init_runs(
         user-specified expert data as provided by :func:`elicit.elicit.Expert`.
     initializer : dict
         user-input from :func:`elicit.elicit.initializer`.
-    parameters : dict
+    parameters : list
         user-input from :func:`elicit.elicit.parameter`.
     trainer : dict
         user-input from :func:`elicit.elicit.trainer`.
     model : dict
         user-input from :func:`elicit.elicit.model`.
-    targets : dict
+    targets : list
         user-input from :func:`elicit.elicit.target`.
-    network : dict
+    network : dict, optional
         user-input from one of the methods implemented in the
         :mod:`elicit.networks` module.
     expert : dict
@@ -211,15 +228,16 @@ def init_runs(
     save_prior = []
 
     # sample initial values
-    init_matrix = uniform_samples(
-        seed,
-        initializer["distribution"]["hyper"],
-        initializer["iterations"],
-        initializer["method"],
-        initializer["distribution"]["mean"],
-        initializer["distribution"]["radius"],
-        parameters,
-    )
+    if initializer["distribution"] is not None:
+        init_matrix = uniform_samples(
+            seed=seed,
+            hyppar=initializer["distribution"]["hyper"],
+            n_samples=initializer["iterations"],
+            method=initializer["method"],
+            mean=initializer["distribution"]["mean"],
+            radius=initializer["distribution"]["radius"],
+            parameters=parameters,
+        )
 
     print("Initialization")
 
@@ -227,8 +245,7 @@ def init_runs(
         # update seed
         seed_copy = seed_copy + 1
         # extract initial hyperparameter value for each run
-        init_matrix_slice = {f"{key}": init_matrix[key][i]
-                             for key in init_matrix}
+        init_matrix_slice = {f"{key}": init_matrix[key][i] for key in init_matrix}
         # initialize prior distributions based on initial hyperparameters
         prior_model = el.simulations.Priors(
             ground_truth=False,
@@ -243,15 +260,17 @@ def init_runs(
         # simulate from priors and generative model and compute the
         # elicited statistics corresponding to the initial hyperparameters
         (training_elicited_statistics, *_) = el.utils.one_forward_simulation(
-            prior_model, trainer, model, targets, seed
+            prior_model=prior_model,
+            model=model,
+            targets=targets,
+            seed=seed
         )
 
         # compute discrepancy between expert elicited statistics and
         # simulated data corresponding to initial hyperparameter values
         (loss, *_) = el.losses.total_loss(
-            training_elicited_statistics,
-            expert_elicited_statistics,
-            epoch=0,
+            elicit_training=training_elicited_statistics,
+            elicit_expert=expert_elicited_statistics,
             targets=targets,
         )
         # save loss value, initial hyperparameter values and initialized prior
@@ -265,15 +284,15 @@ def init_runs(
 
 
 def init_prior(
-    expert_elicited_statistics: dict,
-    initializer: dict,
-    parameters: dict,
-    trainer: dict,
-    model: dict,
-    targets: dict,
-    network: dict,
-    expert: dict,
-    seed: int
+    expert_elicited_statistics: Dict[str, tf.Tensor],
+    initializer: Optional[Initializer],
+    parameters: List[Parameter],
+    trainer: Trainer,
+    model: Dict[str, Any],
+    targets: List[Target],
+    network: Optional[NF],
+    expert: ExpertDict,
+    seed: int,
 ):
     """
     Extracts target loss, corresponding initial hyperparameter values, and
@@ -283,17 +302,17 @@ def init_prior(
     ----------
     expert_elicited_statistics : dict
         user-specified expert data as provided by :func:`elicit.elicit.Expert`.
-    initializer : dict
+    initializer : dict, optional
         user-input from :func:`elicit.elicit.initializer`.
-    parameters : dict
+    parameters : list
         user-input from :func:`elicit.elicit.parameter`.
     trainer : dict
         user-input from :func:`elicit.elicit.trainer`.
     model : dict
         user-input from :func:`elicit.elicit.model`.
-    targets : dict
+    targets : list
         user-input from :func:`elicit.elicit.target`.
-    network : dict
+    network : dict, optional
         user-input from one of the methods implemented in the
         :mod:`elicit.networks` module.
     expert : dict
@@ -315,28 +334,27 @@ def init_prior(
 
     """
 
-    if trainer["method"] == "parametric_prior":
-        
+    if trainer["method"] == "parametric_prior" and initializer is not None:
+
         if initializer["hyperparams"] is None:
 
             loss_list, init_prior, init_matrix = init_runs(
-                expert_elicited_statistics,
-                initializer,
-                parameters,
-                trainer,
-                model,
-                targets,
-                network,
-                expert,
-                seed
+                expert_elicited_statistics=expert_elicited_statistics,
+                initializer=initializer,
+                parameters=parameters,
+                trainer=trainer,
+                model=model,
+                targets=targets,
+                network=None,
+                expert=expert,
+                seed=seed,
             )
-    
+
             # extract pre-specified quantile loss out of all runs
             # get corresponding set of initial values
             loss_quantile = initializer["loss_quantile"]
             index = tf.squeeze(
-                tf.where(loss_list == tfp.stats.percentile(loss_list,
-                                                           [loss_quantile]))
+                tf.where(loss_list == tfp.stats.percentile(loss_list, [loss_quantile]))
             )
 
             init_prior_model = init_prior[int(index)]
@@ -347,13 +365,13 @@ def init_prior(
                 init_matrix_slice=initializer["hyperparams"],
                 trainer=trainer,
                 parameters=parameters,
-                network=network,
+                network=None,
                 expert=expert,
                 seed=seed,
             )
             # initialize empty variables for avoiding return conflicts
             loss_list, init_prior, init_matrix = (None, None, None)
-    else:
+    if trainer["method"] == "deep_prior" and network is not None:
         # prepare generative model
         init_prior_model = el.simulations.Priors(
             ground_truth=False,
@@ -371,10 +389,10 @@ def init_prior(
 
 
 def uniform(
-    radius: float or list[float] = 1.0,
-    mean: float or list[float] = 0.0,
-    hyper: None or list[str] = None,
-):
+    radius: Union[float, List[float]] = 1.0,
+    mean: Union[float, List[float]] = 0.0,
+    hyper: Optional[List[str]] = None,
+) -> Uniform:
     """
     Specification of uniform distribution used for drawing initial values for
     each hyperparameter. Initial values are drawn from a uniform distribution
@@ -402,13 +420,12 @@ def uniform(
         The order of values should be equivalent to the order of hyperparameter
         names provided in **hyper**.
         The default is ``0.``.
-    hyper : None or list[str], optional
+    hyper : list[str], optional
         List of hyperparameter names as specified in :func:`elicit.elicit.hyper`.
         The values provided in **radius** and **mean** should follow the order
         of hyperparameters indicated in this list.
         If a float is passed to **radius** and **mean** this argument is not
         necessary.
-        The default is ``None``.
 
     Raises
     ------

@@ -4,23 +4,26 @@
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-import elicit as el
 import time
 
-from typing import Tuple
+from typing import Tuple, Any, List, Dict
+from elicit.simulations import Priors
+from elicit.utils import one_forward_simulation
+from elicit.losses import total_loss
+from elicit.types import Trainer, Target, Parameter
 from tqdm import tqdm
 
 tfd = tfp.distributions
 
 
 def sgd_training(
-    expert_elicited_statistics: dict[str,tf.Tensor],
-    prior_model_init: callable,
-    trainer: dict,
-    optimizer: dict,
-    model: dict,
-    targets: dict,
-    parameters: list[dict],
+    expert_elicited_statistics: Dict[str, tf.Tensor],
+    prior_model_init: Priors,
+    trainer: Trainer,
+    optimizer: Dict[str, Any],
+    model: Dict[str, Any],
+    targets: List[Target],
+    parameters: List[Parameter],
     seed: int
 ) -> Tuple[dict, dict]:
     """
@@ -33,21 +36,25 @@ def sgd_training(
     prior_model_init : class instance
         instance of a class that initializes and samples from the prior
         distributions.
-    one_forward_simulation : callable
-        one forward simulation cycle including: sampling from priors,
-        simulating model
-        predictions, computing target quantities and elicited statistics.
-    compute_loss : callable
-        sub-dag to compute the loss value including: compute loss components
-        of model simulations and expert data, compute loss per component,
-        compute total loss.
-    global_dict : dict
-        dictionary including all user-input settings.
+    trainer: dict
+        dictionary including settings specified with :func:`elicit.elicit.trainer`
+    optimizer: dict
+        dictionary including settings specified with :func:`elicit.elicit.optimizer`
+    model: dict
+        dictionary including settings specified with :func:`elicit.elicit.model`
+    targets: list[dict]
+        list of target quantities specified with :func:`elicit.elicit.target`
     parameters : list[dict]
-        list of model parameters specified with
-        :func:`elicit.elicit.parameter`.
+        list of model parameters specified with :func:`elicit.elicit.parameter`.
     seed : int
         internally used seed for reproducible results
+
+    Returns
+    -------
+    res_ep: dict
+        results saved for each epoch (history)
+    output_res: dict
+        results saved for the last epoch (results)
 
     Raises
     ------
@@ -60,11 +67,11 @@ def sgd_training(
 
     # prepare generative model
     prior_model = prior_model_init
-    total_loss = []
+    total_losses = []
     component_losses = []
     gradients_ep = []
     time_per_epoch = []
-    
+
     if trainer["method"] == "parametric_prior":
         # save initialized trainable variables of epoch=0 (before first update)
         init_vars_values = [
@@ -72,7 +79,7 @@ def sgd_training(
                 len(prior_model.trainable_variables))
             ]
         init_vars_names = [
-            prior_model.trainable_variables[i].name[:-2].split(".")[1] for i 
+            prior_model.trainable_variables[i].name[:-2].split(".")[1] for i
             in range(len(prior_model.trainable_variables))
             ]
 
@@ -90,17 +97,14 @@ def sgd_training(
 
         with tf.GradientTape() as tape:
             # generate simulations from model
-            (train_elicits, prior_sim, model_sim, target_quants
-             ) = el.utils.one_forward_simulation(
-                prior_model, trainer, model, targets, seed
-            )
+            (train_elicits, prior_sim, model_sim, target_quants) = one_forward_simulation(
+               prior_model=prior_model, model=model, targets=targets, seed=seed)
             # compute total loss as weighted sum
             (loss, indiv_losses, loss_components_expert,
-             loss_components_training) = el.losses.total_loss(
-                 train_elicits,
-                 expert_elicited_statistics,
-                 epoch,
-                 targets
+             loss_components_training) = total_loss(
+                 elicit_training=train_elicits,
+                 elicit_expert=expert_elicited_statistics,
+                 targets=targets
                  )
 
             # compute gradient of loss wrt trainable_variables
@@ -120,15 +124,12 @@ def sgd_training(
         if tf.math.is_nan(loss):
             print("Loss is NAN and therefore training stops.")
             break
-        #     raise ValueError(
-        #         "Loss is NAN. The training process has been stopped."
-        #         )
 
         # %% Saving of results
         if trainer["method"] == "parametric_prior":
             # create a list with constraints for re-transforming hyperparameter
             # before saving them
-            constraint_dict=dict()
+            constraint_dict = dict()
 
             for i in range(len(parameters)):
                 hyp_dict = parameters[i]["hyperparams"]
@@ -147,10 +148,10 @@ def sgd_training(
                 for i in range(len(hyperparams)):
                     hyp_list.append(hyperparams[i].name[:-2].split(".")[1])
                 # create a dict with empty list for each hyperparameter
-                res_dict = {f"{k}": [] for k in hyp_list}
+                res_dict: dict[str, list] = {f"{k}": [] for k in hyp_list}
                 # create final dict with initial train. variables
                 for val, name in zip(init_vars_values, init_vars_names):
-                    res_dict[name].append(val)
+                    res_dict[name].append(float(constraint_dict[name](val)))
             # save names and values of hyperparameters
             vars_values = [
                 hyperparams[i].numpy().copy() for i in range(len(hyperparams))
@@ -177,11 +178,11 @@ def sgd_training(
 
         # savings per epoch (independent from chosen method)
         time_per_epoch.append(epoch_time)
-        total_loss.append(loss)
+        total_losses.append(loss)
         component_losses.append(indiv_losses)
 
     res_ep = {
-        "loss": total_loss,
+        "loss": total_losses,
         "loss_component": component_losses,
         "time": time_per_epoch,
         "hyperparameter": res_dict

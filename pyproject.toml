@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "elicits" 
-version = "0.0.4"
+version = "0.0.6"
 description = "Tool for learning prior distributions based on expert knowledge"
 license = "Apache-2.0"
 license-files = "LICEN[CS]E*"
@@ -26,7 +26,7 @@ keywords = [
 
 [tool.poetry]
 name = "elicits" 
-version = "0.0.4"
+version = "0.0.6"
 description = "Tool for learning prior distributions based on expert knowledge"
 license = "Apache-2.0"
 authors = [
@@ -47,16 +47,17 @@ Documentation = "https://florence-bockting.github.io/elicit"
 Repository = "https://github.com/florence-bockting/elicit"
 
 [tool.poetry.dependencies]
-python = ">=3.11, <3.12"
+python = "3.10.16"
 configs = "3.0.3"
-numpy = "1.24.3"
+numpy = "1.26.4"
 pandas = "2.2.3"
 pyarrow = "16.1.0"
 signac = "2.2.0"
-tensorflow = "2.14"
-tensorflow-probability = "0.22.1"
+tensorflow = "2.15.1"
+tensorflow-probability = "0.23.0"
 tensorflow-io-gcs-filesystem = "0.31.0"
 bayesflow = "1.1.6"
+matplotlib = "3.10.0"
 sphinx-pyproject = "0.3.0"
 sphinx = "7.3.7"
 sphinx-book-theme = "1.1.2"
@@ -67,6 +68,10 @@ sphinxemoji = "0.3.1"
 defusedxml = "0.7.1"
 python-json-logger = "2.0.7"
 genbadge = "1.1.1"
+poetry-core = "*"
+joblib = "1.4.2"
+scipy = "1.15.2"
+tqdm = "4.67.1"
 
 [tool.poetry.group.test.dependencies]  
 pytest-randomly = "^3.15.0"  
