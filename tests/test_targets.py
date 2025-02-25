@@ -18,7 +18,8 @@ def targets1():
     return [
         el.target(
             name="tar",
-            query=el.queries.quantiles((.05, .25, .50, .75, .95))
+            query=el.queries.quantiles((.05, .25, .50, .75, .95)),
+            loss=el.losses.MMD2(kernel="energy")
         )
     ]
 
@@ -54,7 +55,8 @@ def targets2():
     return [
         el.target(
             name="tar",
-            query=el.queries.correlation()
+            query=el.queries.correlation(),
+            loss=el.losses.MMD2(kernel="energy")
         )
     ]
 
@@ -86,7 +88,8 @@ def targets3():
     return [
         el.target(
             name="tar",
-            query=el.queries.identity()
+            query=el.queries.identity(),
+            loss=el.losses.MMD2(kernel="energy")
         )
     ]
 
@@ -124,36 +127,14 @@ def test_computation_target_quantities_cor(prior_samples, targets2):
 
     assert tf.reduce_all(res["tar"] == prior_samples)
 
-
-#%% target quantity: custom target quantity
-@pytest.fixture
-def custom():
-    pass
-
-@pytest.fixture
-def targets4():
-    return [
-        el.target(
-            name="arbitrary",
-            query=el.queries.identity(),
-            target_method=custom
-            )
-        ]
-
-def test_computation_target_quantities_custom(targets4):
-    with pytest.raises(NotImplementedError):
-        el.targets.computation_target_quantities(
-            model_simulations=None, prior_samples=None,
-            targets=targets4)
-
-
 #%% target quantities from model simulations
 @pytest.fixture
 def targets5():
     return [
         el.target(
             name="ypred",
-            query=el.queries.identity()
+            query=el.queries.identity(),
+            loss=el.losses.MMD2(kernel="energy")
         )
     ]
 

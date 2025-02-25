@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "elicits" 
-version = "0.0.6"
+version = "0.0.7"
 description = "Tool for learning prior distributions based on expert knowledge"
 license = "Apache-2.0"
 license-files = "LICEN[CS]E*"
@@ -26,7 +26,7 @@ keywords = [
 
 [tool.poetry]
 name = "elicits" 
-version = "0.0.6"
+version = "0.0.7"
 description = "Tool for learning prior distributions based on expert knowledge"
 license = "Apache-2.0"
 authors = [
@@ -47,7 +47,7 @@ Documentation = "https://florence-bockting.github.io/elicit"
 Repository = "https://github.com/florence-bockting/elicit"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.12"  #"3.10.16"
+python = ">=3.10,<3.12"
 configs = "3.0.3"
 numpy = "1.26.4"
 pandas = "2.2.3"

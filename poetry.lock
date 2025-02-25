@@ -713,7 +713,10 @@ files = [
 [package.dependencies]
 absl-py = ">=0.6.1"
 attrs = ">=18.2.0"
-numpy = {version = ">=1.21.2", markers = "python_version >= \"3.10\""}
+numpy = [
+    {version = ">=1.21.2", markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
+    {version = ">=1.23.3", markers = "python_version >= \"3.11\""},
+]
 wrapt = ">=1.11.2"
 
 [[package]]
@@ -1867,7 +1870,10 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">=1.21.2", markers = "python_version >= \"3.10\""}
+numpy = [
+    {version = ">=1.21.2", markers = "python_version >= \"3.10\" and python_version < \"3.11\""},
+    {version = ">=1.23.3", markers = "python_version >= \"3.11\""},
+]
 
 [package.extras]
 dev = ["absl-py", "pyink", "pylint (>=2.6.0)", "pytest", "pytest-xdist"]
@@ -2162,7 +2168,10 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">=1.22.4", markers = "python_version < \"3.11\""}
+numpy = [
+    {version = ">=1.22.4", markers = "python_version < \"3.11\""},
+    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
 tzdata = ">=2022.7"
@@ -4163,5 +4172,5 @@ type = ["pytest-mypy"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "3.10.16"
-content-hash = "139f3d7aecc0ecfd33f1f5bce62e5fb196f7dc4aebd263091e085bfeea7333d2"
+python-versions = ">=3.10,<3.12"
+content-hash = "b4c7de6feaacbd644aaad24a8eb25357549fcc5100b2ba3972cfede0349d45b2"
