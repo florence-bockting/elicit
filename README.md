@@ -10,7 +10,11 @@ SPDX-License-Identifier: Apache-2.0
 [![Documentation](https://github.com/florence-bockting/prior_elicitation/workflows/Docs/badge.svg)](https://github.com/florence-bockting/prior_elicitation/actions)
 
 # Learning prior distributions based on expert knowledge (*Expert knowledge elicitation*)
-*Note: This project is still in the development stage and not yet tested for practical use.*
+
+> [!Warning]
+> This repository is not actively maintained anymore.
+> 
+> Active development of this project moved to [https://github.com/florence-bockting/elicito](https://github.com/florence-bockting/elicito)
 
 ## Description
 The `elicit` package provides a simulation-based framework for learning either parametric or non-parametric, as well as independent or join prior distributions for parameters in a Bayesian model based on expert knowledge.
